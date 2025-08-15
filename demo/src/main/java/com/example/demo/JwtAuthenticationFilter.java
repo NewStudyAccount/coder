@@ -13,7 +13,14 @@ import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JwtCacheService jwtCacheService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -24,6 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+            // 先检查 token 是否在黑名单
+            if (jwtCacheService != null && jwtCacheService.isTokenBlacklisted(token)) {
+                // token 已失效/拉黑，直接放行但不设置认证信息
+                filterChain.doFilter(request, response);
+                return;
+            }
             if (JwtUtil.validateToken(token)) {
                 Claims claims = JwtUtil.parseToken(token);
                 String username = claims.getSubject();
