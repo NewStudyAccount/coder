@@ -19,9 +19,11 @@ import java.util.Map;
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JwtCacheService jwtCacheService;
 
-    public JwtLoginFilter(AuthenticationManager authenticationManager) {
+    public JwtLoginFilter(AuthenticationManager authenticationManager, JwtCacheService jwtCacheService) {
         this.authenticationManager = authenticationManager;
+        this.jwtCacheService = jwtCacheService;
         setFilterProcessesUrl("/login"); // 登录接口
     }
 
@@ -45,6 +47,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String username = authResult.getName();
         String token = JwtUtil.generateToken(username, new HashMap<>());
+        // 存储token到Redis
+        jwtCacheService.setToken(username, token, JwtUtil.getExpiration());
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"token\": \"" + token + "\"}");
     }

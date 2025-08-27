@@ -40,10 +40,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (JwtUtil.validateToken(token)) {
                 Claims claims = JwtUtil.parseToken(token);
                 String username = claims.getSubject();
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 校验Redis缓存
+                String cachedToken = jwtCacheService.getToken(username);
+                if (cachedToken != null && cachedToken.equals(token)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
         filterChain.doFilter(request, response);

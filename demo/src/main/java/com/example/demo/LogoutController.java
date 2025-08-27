@@ -20,6 +20,9 @@ public class LogoutController {
             String token = authHeader.substring(7);
             try {
                 Claims claims = JwtUtil.parseToken(token);
+                String username = claims.getSubject();
+                // 删除Redis缓存
+                jwtCacheService.deleteToken(username);
                 Date expiration = claims.getExpiration();
                 long expireMillis = expiration.getTime() - System.currentTimeMillis();
                 if (expireMillis > 0) {

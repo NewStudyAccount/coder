@@ -28,6 +28,11 @@ public class JwtUtil {
                 .compact();
     }
 
+    // 获取token有效期（毫秒）
+    public static long getExpiration() {
+        return EXPIRATION;
+    }
+
     // 解析token
     public static Claims parseToken(String token) throws JwtException {
         return Jwts.parserBuilder()
