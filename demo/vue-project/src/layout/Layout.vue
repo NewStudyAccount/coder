@@ -3,9 +3,14 @@
     <el-aside width="200px" style="background: #2d3a4b; color: #fff;">
       <div style="padding: 20px; font-size: 20px; text-align: center;">聊天室</div>
       <el-menu :default-active="activeMenu" class="el-menu-vertical-demo" background-color="#2d3a4b" text-color="#fff" active-text-color="#ffd04b">
-        <el-menu-item index="1">首页</el-menu-item>
-        <el-menu-item index="2">聊天室</el-menu-item>
-        <el-menu-item index="3">设置</el-menu-item>
+        <el-menu-item index="1">
+          <router-link to="/home" style="color: inherit; text-decoration: none;">首页</router-link>
+        </el-menu-item>
+        <el-menu-item index="2">
+          <router-link to="/users" style="color: inherit; text-decoration: none;">用户管理</router-link>
+        </el-menu-item>
+        <el-menu-item index="3">聊天室</el-menu-item>
+        <el-menu-item index="4">设置</el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
