@@ -9,8 +9,11 @@
         <el-menu-item index="2">
           <router-link to="/users" style="color: inherit; text-decoration: none;">用户管理</router-link>
         </el-menu-item>
-        <el-menu-item index="3">聊天室</el-menu-item>
-        <el-menu-item index="4">设置</el-menu-item>
+        <el-menu-item index="3">
+          <router-link to="/permissions" style="color: inherit; text-decoration: none;">权限管理</router-link>
+        </el-menu-item>
+        <el-menu-item index="4">聊天室</el-menu-item>
+        <el-menu-item index="5">设置</el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>

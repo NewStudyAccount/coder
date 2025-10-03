@@ -9,12 +9,14 @@ const User = {
 
 // 路由配置
 const UserManage = () => import('../components/UserManage.vue')
+const UserPermission = () => import('../components/UserPermission.vue')
 
 const routes = [
   { path: '/', redirect: '/home' },
   { path: '/home', component: Home },
   { path: '/about', component: About },
   { path: '/users', component: UserManage },
+  { path: '/permissions', component: UserPermission },
   // 动态路由，带守卫
   { 
     path: '/user/:id', 
