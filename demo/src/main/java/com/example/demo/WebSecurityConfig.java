@@ -22,6 +22,7 @@ public class WebSecurityConfig {
             .addFilterBefore(new JwtAuthenticationFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class) // JWT 校验过滤器
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/public/**").permitAll() // 公共接口无需认证
+                .requestMatchers("/sso/login", "/sso/callback").permitAll() // SSO相关接口无需认证
                 .requestMatchers("/admin/**").hasRole("ADMIN") // 需ADMIN角色
                 .anyRequest().authenticated() // 其他接口需认证
             )

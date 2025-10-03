@@ -17,6 +17,39 @@ const routes = [
   { path: '/about', component: About },
   { path: '/users', component: UserManage },
   { path: '/permissions', component: UserPermission },
+  // SSO回调路由
+  { 
+    path: '/sso/callback',
+    component: {
+      template: '<div>正在处理SSO登录...</div>',
+      async created() {
+        // 获取URL参数token
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get('token')
+        if (!token) {
+          alert('未获取到SSO token')
+          this.$router.replace('/home')
+          return
+        }
+        // 调用后端/sso/callback获取JWT
+        try {
+          const resp = await fetch('/sso/callback?token=' + encodeURIComponent(token))
+          const data = await resp.json()
+          if (data.code === 200 && data.jwt) {
+            localStorage.setItem('jwt', data.jwt)
+            alert('SSO登录成功')
+            this.$router.replace('/home')
+          } else {
+            alert('SSO登录失败：' + (data.msg || '未知错误'))
+            this.$router.replace('/home')
+          }
+        } catch (e) {
+          alert('SSO登录异常')
+          this.$router.replace('/home')
+        }
+      }
+    }
+  },
   // 动态路由，带守卫
   { 
     path: '/user/:id', 

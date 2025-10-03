@@ -20,6 +20,7 @@
     <el-button type="primary" size="small" style="margin-left: 20px;" @click="userStore.setUsername('新用户')">
       切换用户名
     </el-button>
+    <el-button type="primary" size="small" style="margin-left: 10px;" @click="ssoLogin">SSO登录</el-button>
     <el-button type="danger" size="small" style="margin-left: 10px;">退出</el-button>
   </div>
 </template>
@@ -27,6 +28,10 @@
 <script setup>
 import { useUserStore } from '../store/user'
 const userStore = useUserStore()
+
+function ssoLogin() {
+  window.location.href = '/sso/login'
+}
 </script>
 
 <style scoped>
