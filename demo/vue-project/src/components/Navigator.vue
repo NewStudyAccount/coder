@@ -8,6 +8,9 @@
     <router-link to="/about">
       <el-button type="default" size="small" style="margin-left: 10px;">关于</el-button>
     </router-link>
+    <router-link to="/roles">
+      <el-button type="default" size="small" style="margin-left: 10px;">角色管理</el-button>
+    </router-link>
     <router-link to="/user/1">
       <el-button type="default" size="small" style="margin-left: 10px;">用户1</el-button>
     </router-link>

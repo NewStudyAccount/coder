@@ -45,26 +45,41 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
 
-const users = ref([
-  { id: 1, username: '张三', permissions: ['ADMIN', 'USER'] },
-  { id: 2, username: '李四', permissions: ['USER'] },
-  { id: 3, username: '王五', permissions: ['GUEST'] }
-])
-
+const users = ref([])
 const showEditDialog = ref(false)
 const editForm = ref({ id: null, username: '', permissions: [] })
 
+// 加载用户权限列表
+async function fetchUsers() {
+  try {
+    const res = await axios.get('/api/permissions')
+    users.value = res.data
+  } catch (e) {
+    console.error('获取用户权限失败', e)
+  }
+}
+
+// 编辑权限
 function editPermission(user) {
   editForm.value = { ...user, permissions: [...user.permissions] }
   showEditDialog.value = true
 }
 
-function updatePermission() {
-  const idx = users.value.findIndex(u => u.id === editForm.value.id)
-  if (idx !== -1) {
-    users.value[idx].permissions = [...editForm.value.permissions]
+// 保存权限
+async function updatePermission() {
+  try {
+    await axios.put(`/api/permissions/${editForm.value.id}`, {
+      permissions: editForm.value.permissions
+    })
+    showEditDialog.value = false
+    await fetchUsers()
+  } catch (e) {
+    console.error('更新权限失败', e)
   }
-  showEditDialog.value = false
 }
+
+// 页面加载时获取数据
+fetchUsers()
 </script>

@@ -10,6 +10,7 @@ const User = {
 // 路由配置
 const UserManage = () => import('../components/UserManage.vue')
 const UserPermission = () => import('../components/UserPermission.vue')
+const UserRole = () => import('../components/UserRole.vue')
 
 const routes = [
   { path: '/', redirect: '/home' },
@@ -17,6 +18,7 @@ const routes = [
   { path: '/about', component: About },
   { path: '/users', component: UserManage },
   { path: '/permissions', component: UserPermission },
+  { path: '/roles', component: UserRole },
   // SSO回调路由
   { 
     path: '/sso/callback',

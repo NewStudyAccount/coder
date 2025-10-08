@@ -74,4 +74,30 @@ public class RoleController {
         }
         return result;
     }
+
+    // 新增：获取角色权限
+    @GetMapping("/role/permissions")
+    public Map<String, Object> getRolePermissions(@RequestParam Long id) {
+        List<String> perms = roleService.getRolePermissions(id);
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", 0);
+        result.put("msg", "success");
+        result.put("data", perms);
+        return result;
+    }
+
+    // 新增：设置角色权限
+    @PostMapping("/role/permissions")
+    public Map<String, Object> setRolePermissions(@RequestParam Long id, @RequestBody List<String> permissions) {
+        boolean ok = roleService.setRolePermissions(id, permissions);
+        Map<String, Object> result = new HashMap<>();
+        if (ok) {
+            result.put("code", 0);
+            result.put("msg", "success");
+        } else {
+            result.put("code", 404);
+            result.put("msg", "角色不存在");
+        }
+        return result;
+    }
 }
