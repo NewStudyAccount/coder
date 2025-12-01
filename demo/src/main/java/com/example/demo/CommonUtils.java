@@ -193,6 +193,8 @@ public class CommonUtils {
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             System.out.println("sdggdhfjghfd");
+            System.out.println("sdggdhfjghfd");
+            System.out.println("sdggdhfjghfd");
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException("JSON序列化失败", e);
