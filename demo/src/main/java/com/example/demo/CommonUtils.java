@@ -35,11 +35,11 @@ public class CommonUtils {
         return arr == null || arr.length == 0;
     }
 
-    /** 格式化日期为字符串 */
+    /** 格式化日期为字符串（线程安全） */
     public static String formatDate(Date date, String pattern) {
         if (date == null || isEmpty(pattern)) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        return sdf.format(date);
+        return java.time.format.DateTimeFormatter.ofPattern(pattern)
+                .format(date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
     }
 
     /** 安全地将对象转为字符串 */
@@ -48,9 +48,10 @@ public class CommonUtils {
     }
 
     /** 判断字符串是否为数字 */
+    private static final Pattern NUMERIC_PATTERN = Pattern.compile("\\d+");
     public static boolean isNumeric(String str) {
         if (isEmpty(str)) return false;
-        return str.matches("\\d+");
+        return NUMERIC_PATTERN.matcher(str).matches();
     }
 
     /** 首字母大写 */
@@ -117,26 +118,29 @@ public class CommonUtils {
     }
 
     /** 生成指定长度的随机字符串 */
+    private static final String RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final Random GLOBAL_RANDOM = new Random();
     public static String randomString(int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        if (length <= 0) return "";
         StringBuilder sb = new StringBuilder(length);
-        Random random = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
+            sb.append(RANDOM_CHARS.charAt(GLOBAL_RANDOM.nextInt(RANDOM_CHARS.length())));
         }
         return sb.toString();
     }
 
     /** 判断字符串是否为邮箱 */
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     public static boolean isEmail(String str) {
         if (isEmpty(str)) return false;
-        return str.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return EMAIL_PATTERN.matcher(str).matches();
     }
 
     /** 判断字符串是否为手机号（中国大陆） */
+    private static final Pattern MOBILE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
     public static boolean isMobile(String str) {
         if (isEmpty(str)) return false;
-        return str.matches("^1[3-9]\\d{9}$");
+        return MOBILE_PATTERN.matcher(str).matches();
     }
 
     /** 获取UUID字符串 */
@@ -160,9 +164,10 @@ public class CommonUtils {
     }
 
     /** 判断是否为IP地址 */
+    private static final Pattern IP_PATTERN = Pattern.compile("^(\\d{1,3}\\.){3}\\d{1,3}$");
     public static boolean isIp(String str) {
         if (isEmpty(str)) return false;
-        return str.matches("^(\\d{1,3}\\.){3}\\d{1,3}$");
+        return IP_PATTERN.matcher(str).matches();
     }
 
     /** 获取本机IP地址 */
@@ -176,15 +181,16 @@ public class CommonUtils {
     }
 
     /** 判断是否为URL */
+    private static final Pattern URL_PATTERN = Pattern.compile("^(http|https)://.*$");
     public static boolean isUrl(String str) {
         if (isEmpty(str)) return false;
-        return str.matches("^(http|https)://.*$");
+        return URL_PATTERN.matcher(str).matches();
     }
 
     /** 获取指定范围随机整数 */
     public static int randomInt(int min, int max) {
         if (min > max) throw new IllegalArgumentException("min不能大于max");
-        return min + new Random().nextInt(max - min + 1);
+        return min + GLOBAL_RANDOM.nextInt(max - min + 1);
     }
 
     /** 对象转JSON字符串 */
@@ -192,12 +198,9 @@ public class CommonUtils {
         if (obj == null) return "";
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            System.out.println("sdggdhfjghfd");
-            System.out.println("sdggdhfjghfd");
-            System.out.println("sdggdhfjghfd");
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
-            throw new RuntimeException("JSON序列化失败", e);
+            throw new RuntimeException("JSON序列化失败: " + e.getMessage(), e);
         }
     }
 

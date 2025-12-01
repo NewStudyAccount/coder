@@ -29,6 +29,9 @@ public class KafkaUtils {
      */
     public static void sendAsync(String topic, String message) {
         checkTemplate();
+        if (CommonUtils.isEmpty(topic) || CommonUtils.isEmpty(message)) {
+            throw new IllegalArgumentException("topic和message不能为空");
+        }
         kafkaTemplate.send(topic, message);
     }
 
@@ -37,6 +40,9 @@ public class KafkaUtils {
      */
     public static void sendAsync(String topic, String message, ListenableFutureCallback<SendResult<String, String>> callback) {
         checkTemplate();
+        if (CommonUtils.isEmpty(topic) || CommonUtils.isEmpty(message) || callback == null) {
+            throw new IllegalArgumentException("topic、message不能为空，callback不能为null");
+        }
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
         future.addCallback(callback);
     }
@@ -46,6 +52,9 @@ public class KafkaUtils {
      */
     public static void sendBatchAsync(String topic, List<String> messages) {
         checkTemplate();
+        if (CommonUtils.isEmpty(topic) || messages == null || messages.isEmpty()) {
+            throw new IllegalArgumentException("topic不能为空，messages不能为null或空");
+        }
         for (String msg : messages) {
             kafkaTemplate.send(topic, msg);
         }
@@ -56,12 +65,16 @@ public class KafkaUtils {
      */
     public static boolean sendSync(String topic, String message, long timeoutMillis) {
         checkTemplate();
+        if (CommonUtils.isEmpty(topic) || CommonUtils.isEmpty(message) || timeoutMillis <= 0) {
+            throw new IllegalArgumentException("topic、message不能为空，timeoutMillis需大于0");
+        }
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
         try {
             SendResult<String, String> result = future.get(timeoutMillis, TimeUnit.MILLISECONDS);
             RecordMetadata meta = result.getRecordMetadata();
             return meta != null;
         } catch (Exception e) {
+            System.err.println("KafkaUtils.sendSync error: " + e.getMessage());
             return false;
         }
     }
@@ -71,6 +84,9 @@ public class KafkaUtils {
      */
     public static void sendToPartition(String topic, int partition, String key, String message) {
         checkTemplate();
+        if (CommonUtils.isEmpty(topic) || CommonUtils.isEmpty(key) || CommonUtils.isEmpty(message)) {
+            throw new IllegalArgumentException("topic、key、message不能为空");
+        }
         kafkaTemplate.send(topic, partition, key, message);
     }
 
@@ -84,6 +100,7 @@ public class KafkaUtils {
 
     private static void checkTemplate() {
         if (kafkaTemplate == null) {
+            System.err.println("KafkaUtils.checkTemplate: KafkaTemplate未初始化");
             throw new IllegalStateException("KafkaTemplate未初始化，请先调用KafkaUtils.init()注入KafkaTemplate实例");
         }
     }

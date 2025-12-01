@@ -15,6 +15,7 @@ public class ServerInfoUtils {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
+            System.err.println("getHostName error: " + e.getMessage());
             return "unknown";
         }
     }
@@ -24,6 +25,7 @@ public class ServerInfoUtils {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
+            System.err.println("getHostAddress error: " + e.getMessage());
             return "unknown";
         }
     }
@@ -66,6 +68,9 @@ public class ServerInfoUtils {
     /** 获取JVM启动参数 */
     public static String getJvmArgs() {
         RuntimeMXBean mxBean = ManagementFactory.getRuntimeMXBean();
+        if (mxBean.getInputArguments() == null || mxBean.getInputArguments().isEmpty()) {
+            return "";
+        }
         return String.join(" ", mxBean.getInputArguments());
     }
 

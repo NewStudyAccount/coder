@@ -73,8 +73,9 @@ public class SnowflakeIdGenerator {
         long timestamp = timeGen();
 
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException(
-                String.format("Clock moved backwards. Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+            String msg = String.format("Clock moved backwards. Refusing to generate id for %d milliseconds", lastTimestamp - timestamp);
+            System.err.println("SnowflakeIdGenerator.generateId error: " + msg);
+            throw new RuntimeException(msg);
         }
 
         if (lastTimestamp == timestamp) {
@@ -106,6 +107,9 @@ public class SnowflakeIdGenerator {
         return System.currentTimeMillis();
     }
 
+    /**
+     * 测试入口，仅供演示
+     */
     public static void main(String[] args) {
         System.out.println("工具类生成10个雪花ID：");
         for (int i = 0; i < 10; i++) {

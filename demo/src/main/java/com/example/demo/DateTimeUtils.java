@@ -42,12 +42,12 @@ public class DateTimeUtils {
     }
 
     /**
-     * 格式化Date为字符串
+     * 格式化Date为字符串（线程安全）
      */
     public static String format(Date date, String pattern) {
-        if (date == null || pattern == null) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        return sdf.format(date);
+        if (date == null || CommonUtils.isEmpty(pattern)) return "";
+        return DateTimeFormatter.ofPattern(pattern)
+                .format(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
     }
 
     /**
@@ -63,11 +63,12 @@ public class DateTimeUtils {
      * 字符串转Date
      */
     public static Date parseDate(String str, String pattern) {
-        if (str == null || pattern == null) return null;
+        if (CommonUtils.isEmpty(str) || CommonUtils.isEmpty(pattern)) return null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-            return sdf.parse(str);
-        } catch (ParseException e) {
+            LocalDateTime ldt = LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
+            return toDate(ldt);
+        } catch (Exception e) {
+            System.err.println("parseDate error: " + e.getMessage());
             return null;
         }
     }
@@ -76,11 +77,11 @@ public class DateTimeUtils {
      * 字符串转LocalDateTime
      */
     public static LocalDateTime parseLocalDateTime(String str, String pattern) {
-        if (str == null || pattern == null) return null;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(pattern);
+        if (CommonUtils.isEmpty(str) || CommonUtils.isEmpty(pattern)) return null;
         try {
-            return LocalDateTime.parse(str, dtf);
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
         } catch (Exception e) {
+            System.err.println("parseLocalDateTime error: " + e.getMessage());
             return null;
         }
     }
@@ -95,13 +96,13 @@ public class DateTimeUtils {
     }
 
     /**
-     * 计算两个日期之间的天数差
+     * 计算两个日期之间的天数差（绝对值）
      */
     public static long daysBetween(Date start, Date end) {
         if (start == null || end == null) return 0;
         LocalDate s = toLocalDateTime(start).toLocalDate();
         LocalDate e = toLocalDateTime(end).toLocalDate();
-        return Duration.between(s.atStartOfDay(), e.atStartOfDay()).toDays();
+        return Math.abs(Duration.between(s.atStartOfDay(), e.atStartOfDay()).toDays());
     }
 
     /**

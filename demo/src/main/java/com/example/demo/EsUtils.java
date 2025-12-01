@@ -22,6 +22,7 @@ public class EsUtils {
 
     private static void checkTemplate() {
         if (esTemplate == null) {
+            System.err.println("EsUtils.checkTemplate: ElasticsearchRestTemplate未初始化");
             throw new IllegalStateException("ElasticsearchRestTemplate未初始化，请先调用EsUtils.init()注入ElasticsearchRestTemplate实例");
         }
     }
@@ -29,6 +30,9 @@ public class EsUtils {
     /** 新增或更新文档 */
     public static <T> String save(String index, T entity) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index) || entity == null) {
+            throw new IllegalArgumentException("index不能为空，entity不能为null");
+        }
         IndexQuery query = new IndexQueryBuilder()
                 .withObject(entity)
                 .build();
@@ -38,25 +42,40 @@ public class EsUtils {
     /** 根据id查询文档 */
     public static <T> T getById(String index, String id, Class<T> clazz) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index) || CommonUtils.isEmpty(id) || clazz == null) {
+            throw new IllegalArgumentException("index、id不能为空，clazz不能为null");
+        }
         return esTemplate.get(id, clazz, esTemplate.getIndexCoordinatesFor(index));
     }
 
     /** 删除文档 */
     public static void deleteById(String index, String id) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index) || CommonUtils.isEmpty(id)) {
+            throw new IllegalArgumentException("index、id不能为空");
+        }
         esTemplate.delete(id, esTemplate.getIndexCoordinatesFor(index));
     }
 
     /** 搜索文档 */
     public static <T> List<T> search(String index, Query query, Class<T> clazz) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index) || query == null || clazz == null) {
+            throw new IllegalArgumentException("index不能为空，query和clazz不能为null");
+        }
         SearchHits<T> hits = esTemplate.search(query, clazz, esTemplate.getIndexCoordinatesFor(index));
-        return hits.stream().map(hit -> hit.getContent()).toList();
+        // 兼容 Java 8
+        List<T> result = new java.util.ArrayList<>();
+        hits.forEach(hit -> result.add(hit.getContent()));
+        return result;
     }
 
     /** 判断索引是否存在 */
     public static boolean indexExists(String index) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index)) {
+            throw new IllegalArgumentException("index不能为空");
+        }
         IndexOperations ops = esTemplate.indexOps(esTemplate.getIndexCoordinatesFor(index));
         return ops.exists();
     }
@@ -64,6 +83,9 @@ public class EsUtils {
     /** 创建索引 */
     public static boolean createIndex(String index) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index)) {
+            throw new IllegalArgumentException("index不能为空");
+        }
         IndexOperations ops = esTemplate.indexOps(esTemplate.getIndexCoordinatesFor(index));
         return ops.create();
     }
@@ -71,6 +93,9 @@ public class EsUtils {
     /** 删除索引 */
     public static boolean deleteIndex(String index) {
         checkTemplate();
+        if (CommonUtils.isEmpty(index)) {
+            throw new IllegalArgumentException("index不能为空");
+        }
         IndexOperations ops = esTemplate.indexOps(esTemplate.getIndexCoordinatesFor(index));
         return ops.delete();
     }
