@@ -46,40 +46,80 @@ public class OtcCalcService {
         List<OtcItem> orderLevelList = new ArrayList<>();
 
         for (ProductRow pr : products) {
-            if (!productCenterClient.isDnLevelOtcProduct(pr.product_type_code)) {
-                continue;
-            }
-            List<ElementRow> elements = queryElements(key.order_id, key.order_line_id, pr.product_id, pr.prod_item_id);
-            for (ElementRow er : elements) {
-                Map<String, Long> attrs = queryElementAttrs(er.element_id, er.element_item_id);
+            // DN级OTC产品逻辑
+            if (productCenterClient.isDnLevelOtcProduct(pr.product_type_code)) {
+                List<ElementRow> elements = queryElements(key.order_id, key.order_line_id, pr.product_id, pr.prod_item_id);
+                for (ElementRow er : elements) {
+                    Map<String, Long> attrs = queryElementAttrs(er.element_id, er.element_item_id);
 
-                Long standardFee = attrs.get("standard_fee");
-                Long otcFee = attrs.get("otc_fee");
-                Long rebateFee = attrs.get("rebate_fee");
-                Long qtyAttr = attrs.get("qty");
+                    Long standardFee = attrs.get("standard_fee");
+                    Long otcFee = attrs.get("otc_fee");
+                    Long rebateFee = attrs.get("rebate_fee");
+                    Long qtyAttr = attrs.get("qty");
 
-                long realQty = (qtyAttr != null) ? qtyAttr : dnQty;
+                    long realQty = (qtyAttr != null) ? qtyAttr : dnQty;
 
-                if (otcFee != null) {
-                    OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, otcFee, rebateFee, realQty);
-                    Long waived = null;
-                    if (standardFee != null) {
-                        waived = standardFee - otcFee;
+                    if (otcFee != null) {
+                        OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, otcFee, rebateFee, realQty);
+                        Long waived = null;
+                        if (standardFee != null) {
+                            waived = standardFee - otcFee;
+                        }
+                        item.waived_fee = waived;
+                        item.total_fee = multiplySafe(otcFee, realQty);
+                        dnLevelList.add(item);
                     }
-                    item.waived_fee = waived;
-                    item.total_fee = multiplySafe(otcFee, realQty);
-                    dnLevelList.add(item);
+
+                    if (rebateFee != null) {
+                        OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, null, rebateFee, realQty);
+                        Long waived = null;
+                        if (standardFee != null && otcFee != null) {
+                            waived = standardFee - otcFee;
+                        }
+                        item.waived_fee = waived;
+                        item.total_fee = multiplySafe(rebateFee, realQty);
+                        orderLevelList.add(item);
+                    }
                 }
+            }
+            // order级OTC产品逻辑
+            else if (productCenterClient.isOrderLevelOtcProduct(pr.product_type_code)) {
+                List<ElementRow> elements = queryElements(key.order_id, key.order_line_id, pr.product_id, pr.prod_item_id);
+                for (ElementRow er : elements) {
+                    Map<String, Long> attrs = queryElementAttrs(er.element_id, er.element_item_id);
 
-                if (rebateFee != null) {
-                    OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, null, rebateFee, realQty);
-                    Long waived = null;
-                    if (standardFee != null && otcFee != null) {
-                        waived = standardFee - otcFee;
+                    Long standardFee = attrs.get("standard_fee");
+                    Long otcFee = attrs.get("otc_fee");
+                    Long rebateFee = attrs.get("rebate_fee");
+                    Long qtyAttr = attrs.get("qty");
+
+                    // 业务规则：qty=1
+                    long realQty = 1;
+
+                    // otc_fee 存在且不为空（对应otc资费）
+                    if (otcFee != null) {
+                        OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, otcFee, rebateFee, realQty);
+                        Long waived = null;
+                        if (standardFee != null) {
+                            waived = standardFee - otcFee;
+                        }
+                        item.waived_fee = waived;
+                        item.qty = 1L;
+                        item.total_fee = otcFee;
+                        orderLevelList.add(item);
                     }
-                    item.waived_fee = waived;
-                    item.total_fee = multiplySafe(rebateFee, realQty);
-                    orderLevelList.add(item);
+                    // rebate_fee 存在且不为空（对应otc的rebate资费）
+                    if (rebateFee != null) {
+                        OtcItem item = baseItem(req.trade_type_code, pr, er, standardFee, otcFee, rebateFee, realQty);
+                        Long waived = null;
+                        if (standardFee != null && otcFee != null) {
+                            waived = standardFee - otcFee;
+                        }
+                        item.waived_fee = waived;
+                        item.qty = 1L;
+                        item.total_fee = rebateFee;
+                        orderLevelList.add(item);
+                    }
                 }
             }
         }

@@ -14,8 +14,12 @@ import java.util.Set;
 public class ProductCenterClient {
 
     private final Set<String> dnOtcTypes;
+    private final Set<String> orderOtcTypes;
 
-    public ProductCenterClient(@Value("${otc.dn.product-type-codes:OTC_DN,DN_OTC}") String dnOtcTypesCsv) {
+    public ProductCenterClient(
+            @Value("${otc.dn.product-type-codes:OTC_DN,DN_OTC}") String dnOtcTypesCsv,
+            @Value("${otc.order.product-type-codes:OTC_ORDER,ORDER_OTC}") String orderOtcTypesCsv
+    ) {
         if (dnOtcTypesCsv == null || dnOtcTypesCsv.trim().isEmpty()) {
             this.dnOtcTypes = new HashSet<>();
         } else {
@@ -25,6 +29,15 @@ public class ProductCenterClient {
                     .filter(s -> !s.isEmpty())
                     .forEach(s -> this.dnOtcTypes.add(s.toUpperCase()));
         }
+        if (orderOtcTypesCsv == null || orderOtcTypesCsv.trim().isEmpty()) {
+            this.orderOtcTypes = new HashSet<>();
+        } else {
+            this.orderOtcTypes = new HashSet<>();
+            Arrays.stream(orderOtcTypesCsv.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(s -> this.orderOtcTypes.add(s.toUpperCase()));
+        }
     }
 
     /**
@@ -33,5 +46,13 @@ public class ProductCenterClient {
     public boolean isDnLevelOtcProduct(String productTypeCode) {
         if (productTypeCode == null) return false;
         return dnOtcTypes.contains(productTypeCode.toUpperCase());
+    }
+
+    /**
+     * 判定是否为 order 级 OTC 产品
+     */
+    public boolean isOrderLevelOtcProduct(String productTypeCode) {
+        if (productTypeCode == null) return false;
+        return orderOtcTypes.contains(productTypeCode.toUpperCase());
     }
 }
