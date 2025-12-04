@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.otc.TfFUserMapper">
+
+  <resultMap id="TfFUserResultMap" type="com.example.demo.otc.TfFUser">
+    <id property="userId" column="user_id"/>
+    <result property="serialNumber" column="serial_number"/>
+    <result property="netTypeCode" column="net_type_code"/>
+    <result property="removeTag" column="remove_tag"/>
+  </resultMap>
+
+  <select id="selectBySerialAndNetType" resultMap="TfFUserResultMap">
+    SELECT * FROM tf_f_user
+    WHERE serial_number = #{serialNumber}
+      AND net_type_code = #{netTypeCode}
+      AND remove_tag = #{removeTag}
+  </select>
+
+</mapper>

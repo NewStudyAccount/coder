@@ -123,7 +123,13 @@
             <artifactId>flink-connector-mysql-cdc</artifactId>
             <version>3.1.0</version>
         </dependency>
-    </dependencies>
+      <!-- MyBatis 依赖 -->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+  </dependencies>
 
     <build>
         <plugins>

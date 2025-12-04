@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.otc.OrderLineItemMapper">
+
+  <resultMap id="OrderLineItemResultMap" type="com.example.demo.otc.OrderLineItem">
+    <id property="orderId" column="order_id"/>
+    <id property="orderLineId" column="order_line_id"/>
+    <result property="attrCode" column="attr_code"/>
+    <result property="attrValue" column="attr_value"/>
+    <result property="modifyTag" column="modify_tag"/>
+  </resultMap>
+
+  <select id="selectByOrderAndAttr" resultMap="OrderLineItemResultMap">
+    SELECT * FROM oc_order_line_item
+    WHERE order_id = #{orderId}
+      AND order_line_id = #{orderLineId}
+      AND attr_code = #{attrCode}
+      AND modify_tag = #{modifyTag}
+  </select>
+
+</mapper>
