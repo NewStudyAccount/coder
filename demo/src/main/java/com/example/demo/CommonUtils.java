@@ -7,10 +7,31 @@ import java.util.stream.Collectors;
 
 /**
  * 通用工具类，封装常用静态方法，建议全项目统一使用
+ * <p>
+ * 用法示例：
+ * <pre>
+ *     CommonUtils.isEmpty(str);
+ *     CommonUtils.toJson(obj);
+ *     CommonUtils.randomString(8);
+ * </pre>
+ * 主要功能：
+ * - 字符串、集合、数组判空
+ * - 日期格式化
+ * - 字符串处理（分割、连接、反转、大小写转换等）
+ * - 数字、邮箱、手机号、IP、URL校验
+ * - 随机数/字符串生成
+ * - 深拷贝
+ * - JSON序列化/反序列化
+ * - 文件扩展名、UUID等
  */
 public class CommonUtils {
 
-    /** 判断字符串是否为空（null/空串/全空格） */
+    /**
+     * 判断字符串是否为空（null/空串/全空格）
+     *
+     * @param str 待判断字符串
+     * @return 是否为空
+     */
     public static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
@@ -35,7 +56,13 @@ public class CommonUtils {
         return arr == null || arr.length == 0;
     }
 
-    /** 格式化日期为字符串（线程安全） */
+    /**
+     * 格式化日期为字符串（线程安全）
+     *
+     * @param date    日期对象
+     * @param pattern 格式化模式（如 yyyy-MM-dd HH:mm:ss）
+     * @return 格式化后的字符串，失败返回空串
+     */
     public static String formatDate(Date date, String pattern) {
         if (date == null || isEmpty(pattern)) return "";
         return java.time.format.DateTimeFormatter.ofPattern(pattern)
@@ -100,7 +127,14 @@ public class CommonUtils {
         return split(str, ",").stream().map(String::trim).collect(Collectors.toList());
     }
 
-    /** 深拷贝对象（需实现Serializable接口） */
+    /**
+     * 深拷贝对象（需实现Serializable接口）
+     *
+     * @param obj 待拷贝对象
+     * @param <T> 类型
+     * @return 拷贝后的新对象
+     * @throws RuntimeException 拷贝失败时抛出
+     */
     @SuppressWarnings("unchecked")
     public static <T> T deepClone(T obj) {
         if (obj == null) return null;
@@ -112,8 +146,12 @@ public class CommonUtils {
             java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(bos.toByteArray());
             java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bis);
             return (T) ois.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("深拷贝失败：类型未找到", e);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("深拷贝失败：IO异常", e);
         } catch (Exception e) {
-            throw new RuntimeException("深拷贝失败", e);
+            throw new RuntimeException("深拷贝失败：" + e.getMessage(), e);
         }
     }
 
@@ -193,25 +231,43 @@ public class CommonUtils {
         return min + GLOBAL_RANDOM.nextInt(max - min + 1);
     }
 
-    /** 对象转JSON字符串 */
+    /**
+     * 对象转JSON字符串
+     *
+     * @param obj 待序列化对象
+     * @return JSON字符串
+     * @throws RuntimeException 序列化失败时抛出
+     */
     public static String toJson(Object obj) {
         if (obj == null) return "";
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             return mapper.writeValueAsString(obj);
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new RuntimeException("JSON序列化失败: " + e.getMessage(), e);
         } catch (Exception e) {
             throw new RuntimeException("JSON序列化失败: " + e.getMessage(), e);
         }
     }
 
-    /** JSON字符串转对象 */
+    /**
+     * JSON字符串转对象
+     *
+     * @param json  JSON字符串
+     * @param clazz 目标类型
+     * @param <T>   类型
+     * @return 反序列化后的对象
+     * @throws RuntimeException 反序列化失败时抛出
+     */
     public static <T> T fromJson(String json, Class<T> clazz) {
         if (isEmpty(json) || clazz == null) return null;
         try {
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             return mapper.readValue(json, clazz);
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new RuntimeException("JSON反序列化失败: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("JSON反序列化失败", e);
+            throw new RuntimeException("JSON反序列化失败: " + e.getMessage(), e);
         }
     }
 }
