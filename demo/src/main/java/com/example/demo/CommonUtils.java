@@ -65,8 +65,12 @@ public class CommonUtils {
      */
     public static String formatDate(Date date, String pattern) {
         if (date == null || isEmpty(pattern)) return "";
-        return java.time.format.DateTimeFormatter.ofPattern(pattern)
-                .format(date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+        try {
+            return java.time.format.DateTimeFormatter.ofPattern(pattern)
+                    .format(date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     /** 安全地将对象转为字符串 */
@@ -138,14 +142,18 @@ public class CommonUtils {
     @SuppressWarnings("unchecked")
     public static <T> T deepClone(T obj) {
         if (obj == null) return null;
-        try {
+        try (
             java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-            java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(bos);
+            java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(bos)
+        ) {
             oos.writeObject(obj);
             oos.flush();
-            java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(bos.toByteArray());
-            java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bis);
-            return (T) ois.readObject();
+            try (
+                java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(bos.toByteArray());
+                java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bis)
+            ) {
+                return (T) ois.readObject();
+            }
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("深拷贝失败：类型未找到", e);
         } catch (java.io.IOException e) {
@@ -157,12 +165,12 @@ public class CommonUtils {
 
     /** 生成指定长度的随机字符串 */
     private static final String RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final Random GLOBAL_RANDOM = new Random();
     public static String randomString(int length) {
         if (length <= 0) return "";
         StringBuilder sb = new StringBuilder(length);
+        java.util.concurrent.ThreadLocalRandom random = java.util.concurrent.ThreadLocalRandom.current();
         for (int i = 0; i < length; i++) {
-            sb.append(RANDOM_CHARS.charAt(GLOBAL_RANDOM.nextInt(RANDOM_CHARS.length())));
+            sb.append(RANDOM_CHARS.charAt(random.nextInt(RANDOM_CHARS.length())));
         }
         return sb.toString();
     }
@@ -228,7 +236,7 @@ public class CommonUtils {
     /** 获取指定范围随机整数 */
     public static int randomInt(int min, int max) {
         if (min > max) throw new IllegalArgumentException("min不能大于max");
-        return min + GLOBAL_RANDOM.nextInt(max - min + 1);
+        return min + java.util.concurrent.ThreadLocalRandom.current().nextInt(max - min + 1);
     }
 
     /**
@@ -238,11 +246,11 @@ public class CommonUtils {
      * @return JSON字符串
      * @throws RuntimeException 序列化失败时抛出
      */
+    private static final com.fasterxml.jackson.databind.ObjectMapper OBJECT_MAPPER = new com.fasterxml.jackson.databind.ObjectMapper();
     public static String toJson(Object obj) {
         if (obj == null) return "";
         try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            return mapper.writeValueAsString(obj);
+            return OBJECT_MAPPER.writeValueAsString(obj);
         } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
             throw new RuntimeException("JSON序列化失败: " + e.getMessage(), e);
         } catch (Exception e) {
@@ -262,8 +270,7 @@ public class CommonUtils {
     public static <T> T fromJson(String json, Class<T> clazz) {
         if (isEmpty(json) || clazz == null) return null;
         try {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            return mapper.readValue(json, clazz);
+            return OBJECT_MAPPER.readValue(json, clazz);
         } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
             throw new RuntimeException("JSON反序列化失败: " + e.getMessage(), e);
         } catch (Exception e) {

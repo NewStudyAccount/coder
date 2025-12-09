@@ -23,7 +23,7 @@ public class UserRelationController {
      * 生成用户关系台账
      */
     @PostMapping("/generate")
-    public UserRelationResponse generate(@RequestBody UserRelationRequest req) {
+    public UserRelationResponse generate(@Valid @RequestBody UserRelationRequest req) {
         if (req == null) {
             UserRelationResponse resp = new UserRelationResponse();
             resp.success = false;

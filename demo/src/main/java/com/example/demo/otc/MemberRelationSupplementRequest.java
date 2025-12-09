@@ -1,10 +1,17 @@
 package com.example.demo.otc;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class MemberRelationSupplementRequest {
+    @NotNull(message = "orderId不能为空")
     private Long orderId;
+    @NotNull(message = "orderLineId不能为空")
     private Long orderLineId;
+    @NotBlank(message = "snUserId不能为空")
     private String snUserId;
     private String parentSerialNumber;
+    @NotBlank(message = "srd不能为空")
     private String srd;
 
     public Long getOrderId() {

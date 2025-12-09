@@ -24,7 +24,7 @@ public class MemberRelationSupplementController {
      * 补充成员关系
      */
     @PostMapping("/supplement")
-    public MemberRelationSupplementResponse supplement(@RequestBody MemberRelationSupplementRequest request) {
+    public MemberRelationSupplementResponse supplement(@Valid @RequestBody MemberRelationSupplementRequest request) {
         if (request == null) {
             MemberRelationSupplementResponse resp = new MemberRelationSupplementResponse();
             resp.setSuccess(false);

@@ -16,7 +16,7 @@ public class StringUtils {
      */
     public static String abbreviate(String str, int maxWidth) {
         if (str == null) return null;
-        if (maxWidth <= 3) return str == null ? null : "...";
+        if (maxWidth <= 3) return "...";
         if (str.length() <= maxWidth) return str;
         return str.substring(0, Math.max(0, maxWidth - 3)) + "...";
     }
@@ -32,12 +32,7 @@ public class StringUtils {
         if (str == null || target == null || replacement == null) return str;
         if (target.isEmpty()) {
             // target为空串，插入replacement到每个字符间
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < str.length(); i++) {
-                sb.append(str.charAt(i));
-                if (i < str.length() - 1) sb.append(replacement);
-            }
-            return sb.toString();
+            return String.join(replacement, str.split(""));
         }
         return str.replace(target, replacement);
     }
