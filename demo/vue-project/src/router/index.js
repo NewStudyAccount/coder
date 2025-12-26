@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/HelloWorld.vue'
 
-// 懒加载或直接导入新建的 OIDC 组件
+// 懒加载或直接导入新建的 OIDC 与 Penrose 组件
 import OidcLogin from '../components/OidcLogin.vue'
 import OidcCallback from '../components/OidcCallback.vue'
 import OidcUserinfo from '../components/OidcUserinfo.vue'
 import ExternalLogin from '../components/ExternalLogin.vue'
+import PenroseTiling from '../components/PenroseTiling.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -14,6 +15,8 @@ const routes = [
   { path: '/external-login', name: 'external-login', component: ExternalLogin },
   { path: '/callback', name: 'oidc-callback', component: OidcCallback },
   { path: '/userinfo', name: 'oidc-userinfo', component: OidcUserinfo },
+  // Penrose Tiling 演示
+  { path: '/penrose', name: 'penrose', component: PenroseTiling },
 ]
 
 const router = createRouter({
