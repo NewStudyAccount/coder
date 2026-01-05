@@ -5,11 +5,13 @@ import Home from '../components/HelloWorld.vue'
 import OidcLogin from '../components/OidcLogin.vue'
 import OidcCallback from '../components/OidcCallback.vue'
 import OidcUserinfo from '../components/OidcUserinfo.vue'
+import SSOLogin from '../components/SSOLogin.vue'
 import ExternalLogin from '../components/ExternalLogin.vue'
 import PenroseTiling from '../components/PenroseTiling.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
+  { path: '/sso', name: 'sso-login', component: SSOLogin },
   // OIDC 演示路由（直连自建 IdP /oidc2/**）
   { path: '/oidc2/login', name: 'oidc-login', component: OidcLogin },
   { path: '/external-login', name: 'external-login', component: ExternalLogin },
