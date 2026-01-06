@@ -11,6 +11,9 @@
       <li :class="{active: active==='list'}">
         <a href="#" @click.prevent="switchPage('list')">列表展示</a>
       </li>
+      <li :class="{active: active==='oss'}">
+        <a href="#" @click.prevent="switchPage('oss')">OSS 管理</a>
+      </li>
       <li>
         <a href="#">帮助</a>
       </li>

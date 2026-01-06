@@ -8,6 +8,7 @@ import OidcUserinfo from '../components/OidcUserinfo.vue'
 import SSOLogin from '../components/SSOLogin.vue'
 import ExternalLogin from '../components/ExternalLogin.vue'
 import PenroseTiling from '../components/PenroseTiling.vue'
+import OssManage from '../components/OssManage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -19,6 +20,8 @@ const routes = [
   { path: '/userinfo', name: 'oidc-userinfo', component: OidcUserinfo },
   // Penrose Tiling 演示
   { path: '/penrose', name: 'penrose', component: PenroseTiling },
+  // OSS 管理演示
+  { path: '/oss', name: 'oss-manage', component: OssManage },
 ]
 
 const router = createRouter({

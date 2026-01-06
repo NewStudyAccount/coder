@@ -9,6 +9,7 @@
       <OrderServiceComposer v-if="activePage === 'compose'" @error="addError" />
       <ListPage v-if="activePage === 'list'" @detail="showDetail" />
       <DetailPage v-if="activePage === 'detail'" :orderId="detailOrderId" @back="switchPage('list')" />
+      <OssManage v-if="activePage === 'oss'" />
     </main>
   </div>
 </template>
@@ -20,6 +21,7 @@ import ErrorConsole from './components/ErrorConsole.vue'
 import OrderServiceComposer from './components/OrderServiceComposer.vue'
 import ListPage from './components/ListPage.vue'
 import DetailPage from './components/DetailPage.vue'
+import OssManage from './components/OssManage.vue'
 
 const errors = ref([])
 const activePage = ref('home')
