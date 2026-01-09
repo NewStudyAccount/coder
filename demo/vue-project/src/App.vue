@@ -11,6 +11,7 @@
       <DetailPage v-if="activePage === 'detail'" :orderId="detailOrderId" @back="switchPage('list')" />
       <OssManage v-if="activePage === 'oss'" />
       <IddProcessPage v-if="activePage === 'idd'" />
+      <SuspendProcessPage v-if="activePage === 'suspend'" />
     </main>
   </div>
 </template>
@@ -24,6 +25,7 @@ import ListPage from './components/ListPage.vue'
 import DetailPage from './components/DetailPage.vue'
 import OssManage from './components/OssManage.vue'
 import IddProcessPage from './components/IddProcessPage.vue'
+import SuspendProcessPage from './components/SuspendProcessPage.vue'
 
 const errors = ref([])
 const activePage = ref('home')

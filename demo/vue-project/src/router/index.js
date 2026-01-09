@@ -10,6 +10,7 @@ import ExternalLogin from '../components/ExternalLogin.vue'
 import PenroseTiling from '../components/PenroseTiling.vue'
 import OssManage from '../components/OssManage.vue'
 import IddProcessPage from '../components/IddProcessPage.vue'
+import SuspendProcessPage from '../components/SuspendProcessPage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -25,6 +26,8 @@ const routes = [
   { path: '/oss', name: 'oss-manage', component: OssManage },
   // IDD 业务处理演示
   { path: '/idd', name: 'idd-process', component: IddProcessPage },
+  // 停机业务处理演示
+  { path: '/suspend', name: 'suspend-process', component: SuspendProcessPage },
 ]
 
 const router = createRouter({
