@@ -12,6 +12,7 @@
       <OssManage v-if="activePage === 'oss'" />
       <IddProcessPage v-if="activePage === 'idd'" />
       <SuspendProcessPage v-if="activePage === 'suspend'" />
+      <IddSuspendProcessPage v-if="activePage === 'idd-suspend'" />
     </main>
   </div>
 </template>
@@ -26,6 +27,7 @@ import DetailPage from './components/DetailPage.vue'
 import OssManage from './components/OssManage.vue'
 import IddProcessPage from './components/IddProcessPage.vue'
 import SuspendProcessPage from './components/SuspendProcessPage.vue'
+import IddSuspendProcessPage from './components/IddSuspendProcessPage.vue'
 
 const errors = ref([])
 const activePage = ref('home')

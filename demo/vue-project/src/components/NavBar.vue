@@ -20,6 +20,9 @@
       <li :class="{active: active==='suspend'}">
         <a href="#" @click.prevent="switchPage('suspend')">停机业务</a>
       </li>
+      <li :class="{active: active==='idd-suspend'}">
+        <a href="#" @click.prevent="switchPage('idd-suspend')">仅停 IDD</a>
+      </li>
       <li>
         <a href="#">帮助</a>
       </li>

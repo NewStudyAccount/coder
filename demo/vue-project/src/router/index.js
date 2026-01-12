@@ -11,6 +11,7 @@ import PenroseTiling from '../components/PenroseTiling.vue'
 import OssManage from '../components/OssManage.vue'
 import IddProcessPage from '../components/IddProcessPage.vue'
 import SuspendProcessPage from '../components/SuspendProcessPage.vue'
+import IddSuspendProcessPage from '../components/IddSuspendProcessPage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -28,6 +29,8 @@ const routes = [
   { path: '/idd', name: 'idd-process', component: IddProcessPage },
   // 停机业务处理演示
   { path: '/suspend', name: 'suspend-process', component: SuspendProcessPage },
+  // 仅停 IDD 业务处理演示
+  { path: '/idd-suspend', name: 'idd-suspend-process', component: IddSuspendProcessPage },
 ]
 
 const router = createRouter({
