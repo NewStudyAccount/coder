@@ -13,6 +13,7 @@
       <IddProcessPage v-if="activePage === 'idd'" />
       <SuspendProcessPage v-if="activePage === 'suspend'" />
       <IddSuspendProcessPage v-if="activePage === 'idd-suspend'" />
+      <ChangeGroupProcessPage v-if="activePage === 'change-group'" />
     </main>
   </div>
 </template>
@@ -28,6 +29,7 @@ import OssManage from './components/OssManage.vue'
 import IddProcessPage from './components/IddProcessPage.vue'
 import SuspendProcessPage from './components/SuspendProcessPage.vue'
 import IddSuspendProcessPage from './components/IddSuspendProcessPage.vue'
+import ChangeGroupProcessPage from './components/ChangeGroupProcessPage.vue'
 
 const errors = ref([])
 const activePage = ref('home')

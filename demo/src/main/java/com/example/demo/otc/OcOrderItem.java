@@ -1,8 +1,8 @@
 package com.example.demo.otc;
 
-public class OrderLineItem {
+public class OcOrderItem {
     private Long orderId;
-    private Long orderLineId;
+    private Long orderItemId; // 假设有主键
     private String attrCode;
     private String attrValue;
     private String modifyTag;
@@ -17,12 +17,12 @@ public class OrderLineItem {
         this.orderId = orderId;
     }
 
-    public Long getOrderLineId() {
-        return orderLineId;
+    public Long getOrderItemId() {
+        return orderItemId;
     }
 
-    public void setOrderLineId(Long orderLineId) {
-        this.orderLineId = orderLineId;
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public String getAttrCode() {

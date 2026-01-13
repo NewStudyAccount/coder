@@ -23,6 +23,9 @@
       <li :class="{active: active==='idd-suspend'}">
         <a href="#" @click.prevent="switchPage('idd-suspend')">仅停 IDD</a>
       </li>
+      <li :class="{active: active==='change-group'}">
+        <a href="#" @click.prevent="switchPage('change-group')">群组改号</a>
+      </li>
       <li>
         <a href="#">帮助</a>
       </li>

@@ -12,6 +12,7 @@ import OssManage from '../components/OssManage.vue'
 import IddProcessPage from '../components/IddProcessPage.vue'
 import SuspendProcessPage from '../components/SuspendProcessPage.vue'
 import IddSuspendProcessPage from '../components/IddSuspendProcessPage.vue'
+import ChangeGroupProcessPage from '../components/ChangeGroupProcessPage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -31,6 +32,8 @@ const routes = [
   { path: '/suspend', name: 'suspend-process', component: SuspendProcessPage },
   // 仅停 IDD 业务处理演示
   { path: '/idd-suspend', name: 'idd-suspend-process', component: IddSuspendProcessPage },
+  // 群组改号业务处理演示
+  { path: '/change-group', name: 'change-group-process', component: ChangeGroupProcessPage },
 ]
 
 const router = createRouter({
