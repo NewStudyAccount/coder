@@ -5,6 +5,16 @@ public class OcOrderLine {
     private Long orderLineId;
     private String serialNumber;
     private Long snCustId;
+    private Long snUserId;
+    private String tradeTypeCode;
+    private String cancelTag;
+    private Integer lineLevel;
+    private Integer produceOrderState;
+    private java.time.LocalDateTime srd;
+    private String netTypeCode;
+    private String sceneType;
+    private String parentSerialNumber;
+    private Long custId;
 
     public Long getOrderId() {
         return orderId;
@@ -36,5 +46,85 @@ public class OcOrderLine {
 
     public void setSnCustId(Long snCustId) {
         this.snCustId = snCustId;
+    }
+
+    public Long getSnUserId() {
+        return snUserId;
+    }
+
+    public void setSnUserId(Long snUserId) {
+        this.snUserId = snUserId;
+    }
+
+    public String getTradeTypeCode() {
+        return tradeTypeCode;
+    }
+
+    public void setTradeTypeCode(String tradeTypeCode) {
+        this.tradeTypeCode = tradeTypeCode;
+    }
+
+    public String getCancelTag() {
+        return cancelTag;
+    }
+
+    public void setCancelTag(String cancelTag) {
+        this.cancelTag = cancelTag;
+    }
+
+    public Integer getLineLevel() {
+        return lineLevel;
+    }
+
+    public void setLineLevel(Integer lineLevel) {
+        this.lineLevel = lineLevel;
+    }
+
+    public Integer getProduceOrderState() {
+        return produceOrderState;
+    }
+
+    public void setProduceOrderState(Integer produceOrderState) {
+        this.produceOrderState = produceOrderState;
+    }
+
+    public java.time.LocalDateTime getSrd() {
+        return srd;
+    }
+
+    public void setSrd(java.time.LocalDateTime srd) {
+        this.srd = srd;
+    }
+
+    public String getNetTypeCode() {
+        return netTypeCode;
+    }
+
+    public void setNetTypeCode(String netTypeCode) {
+        this.netTypeCode = netTypeCode;
+    }
+
+    public String getSceneType() {
+        return sceneType;
+    }
+
+    public void setSceneType(String sceneType) {
+        this.sceneType = sceneType;
+    }
+
+    public String getParentSerialNumber() {
+        return parentSerialNumber;
+    }
+
+    public void setParentSerialNumber(String parentSerialNumber) {
+        this.parentSerialNumber = parentSerialNumber;
+    }
+
+    public Long getCustId() {
+        return custId;
+    }
+
+    public void setCustId(Long custId) {
+        this.custId = custId;
     }
 }

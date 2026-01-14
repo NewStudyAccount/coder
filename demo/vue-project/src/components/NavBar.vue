@@ -26,6 +26,15 @@
       <li :class="{active: active==='change-group'}">
         <a href="#" @click.prevent="switchPage('change-group')">群组改号</a>
       </li>
+      <li :class="{active: active==='add-hunting'}">
+        <a href="#" @click.prevent="switchPage('add-hunting')">加装 Hunting</a>
+      </li>
+      <li :class="{active: active==='credit-terminate'}">
+        <a href="#" @click.prevent="switchPage('credit-terminate')">信控拆机</a>
+      </li>
+      <li :class="{active: active==='credit-control-suspend'}">
+        <a href="#" @click.prevent="switchPage('credit-control-suspend')">信控停机</a>
+      </li>
       <li>
         <a href="#">帮助</a>
       </li>

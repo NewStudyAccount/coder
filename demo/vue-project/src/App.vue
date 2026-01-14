@@ -14,6 +14,9 @@
       <SuspendProcessPage v-if="activePage === 'suspend'" />
       <IddSuspendProcessPage v-if="activePage === 'idd-suspend'" />
       <ChangeGroupProcessPage v-if="activePage === 'change-group'" />
+      <AddHuntingProcessPage v-if="activePage === 'add-hunting'" />
+      <CreditTerminateProcessPage v-if="activePage === 'credit-terminate'" />
+      <CreditControlSuspendPage v-if="activePage === 'credit-control-suspend'" />
     </main>
   </div>
 </template>
@@ -30,6 +33,9 @@ import IddProcessPage from './components/IddProcessPage.vue'
 import SuspendProcessPage from './components/SuspendProcessPage.vue'
 import IddSuspendProcessPage from './components/IddSuspendProcessPage.vue'
 import ChangeGroupProcessPage from './components/ChangeGroupProcessPage.vue'
+import AddHuntingProcessPage from './components/AddHuntingProcessPage.vue'
+import CreditTerminateProcessPage from './components/CreditTerminateProcessPage.vue'
+import CreditControlSuspendPage from './components/CreditControlSuspendPage.vue'
 
 const errors = ref([])
 const activePage = ref('home')

@@ -13,6 +13,9 @@ import IddProcessPage from '../components/IddProcessPage.vue'
 import SuspendProcessPage from '../components/SuspendProcessPage.vue'
 import IddSuspendProcessPage from '../components/IddSuspendProcessPage.vue'
 import ChangeGroupProcessPage from '../components/ChangeGroupProcessPage.vue'
+import AddHuntingProcessPage from '../components/AddHuntingProcessPage.vue'
+import CreditTerminateProcessPage from '../components/CreditTerminateProcessPage.vue'
+import CreditControlSuspendPage from '../components/CreditControlSuspendPage.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -34,6 +37,12 @@ const routes = [
   { path: '/idd-suspend', name: 'idd-suspend-process', component: IddSuspendProcessPage },
   // 群组改号业务处理演示
   { path: '/change-group', name: 'change-group-process', component: ChangeGroupProcessPage },
+  // 加装 Hunting 业务处理演示
+  { path: '/add-hunting', name: 'add-hunting-process', component: AddHuntingProcessPage },
+  // 信控拆机业务处理演示
+  { path: '/credit-terminate', name: 'credit-terminate-process', component: CreditTerminateProcessPage },
+  // 信控停机业务处理演示
+  { path: '/credit-control-suspend', name: 'credit-control-suspend', component: CreditControlSuspendPage },
 ]
 
 const router = createRouter({
