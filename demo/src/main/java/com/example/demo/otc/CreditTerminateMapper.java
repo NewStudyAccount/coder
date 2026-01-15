@@ -33,12 +33,19 @@ public interface CreditTerminateMapper {
             "VALUES (#{orderId}, #{orderLineId}, #{attrCode}, #{attrValue}, #{modifyTag}, #{startDate}, #{endDate})")
     void insertOrderLineItem(OrderLineItem item);
 
+    @Insert("INSERT INTO oc_order_line (order_id, order_line_id, serial_number, user_id, net_type_code, main_product_id, main_product_name, main_product_type, product_family, trade_type_code, scene_type) " +
+            "VALUES (#{orderId}, #{orderLineId}, #{serialNumber}, #{userId}, #{netTypeCode}, #{mainProductId}, #{mainProductName}, #{mainProductType}, #{productFamily}, #{tradeTypeCode}, #{sceneType})")
+    void insertOrderLine(OcOrderLine line);
+
     @Insert("INSERT INTO oc_order_item (order_id, attr_code, attr_value, modify_tag, start_date, end_date) " +
             "VALUES (#{orderId}, #{attrCode}, #{attrValue}, #{modifyTag}, #{startDate}, #{endDate})")
     void insertOrderItem(OcOrderItem item);
 
     @Update("UPDATE oc_order_line SET order_node_state = '04', cancel_tag = 'Z', remark = #{remark} WHERE order_id = #{orderId} AND order_line_id = #{orderLineId}")
     void terminateOrderLine(@Param("orderId") Long orderId, @Param("orderLineId") Long orderLineId, @Param("remark") String remark);
+
+    @Select("SELECT * FROM tf_f_user WHERE user_id = #{userId}")
+    TfFUser getUserInfo(@Param("userId") Long userId);
 
     // 检查用户是否在 IDAP 关系中
     @Select("SELECT relation_type_code FROM tf_f_user_relation WHERE user_id = #{userId} AND end_date > SYSDATE")
