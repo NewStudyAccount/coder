@@ -101,4 +101,16 @@ public interface CreditTerminateMapper {
     // 辅助查询：根据 ID 获取订单行
     @Select("SELECT * FROM oc_order_line WHERE order_id = #{orderId} AND order_line_id = #{orderLineId}")
     OcOrderLine queryOcOrderLineById(@Param("orderId") Long orderId, @Param("orderLineId") Long orderLineId);
+
+    // 查询 oc_order_line_item
+    @Select("SELECT * FROM oc_order_line_item WHERE order_id = #{orderId} AND attr_code = #{attrCode}")
+    List<OrderLineItem> queryOrderLineItems(@Param("orderId") Long orderId, @Param("attrCode") String attrCode);
+
+    // 查询 oc_order_line_item 带值
+    @Select("SELECT * FROM oc_order_line_item WHERE order_id = #{orderId} AND attr_code = #{attrCode} AND attr_value = #{attrValue}")
+    List<OrderLineItem> queryOrderLineItemsWithValue(@Param("orderId") Long orderId, @Param("attrCode") String attrCode, @Param("attrValue") String attrValue);
+
+    // 更新 oc_order_line_item 值
+    @Update("UPDATE oc_order_line_item SET attr_value = #{newValue} WHERE order_id = #{orderId} AND order_line_id = #{orderLineId} AND attr_code = #{attrCode}")
+    void updateOrderLineItemValue(@Param("orderId") Long orderId, @Param("orderLineId") Long orderLineId, @Param("attrCode") String attrCode, @Param("newValue") String newValue);
 }

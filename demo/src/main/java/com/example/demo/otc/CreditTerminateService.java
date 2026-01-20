@@ -421,4 +421,82 @@ public class CreditTerminateService {
         }
         return true;
     }
+
+    /**
+     * 处理竣工消息逻辑
+     */
+    @Transactional
+    public void processCompletionMessage(Long orderId) {
+        // 逻辑 2: 查询 oc_order_line_item 是否有 attr_code = 'cancel_for_credit_termination'
+        List<OrderLineItem> items = creditTerminateMapper.queryOrderLineItems(orderId, "cancel_for_credit_termination");
+        if (items != null && !items.isEmpty()) {
+            for (OrderLineItem item : items) {
+                // 2.1 获取 sn_user_id
+                Long orderLineId = item.getOrderLineId();
+                OcOrderLine line = creditTerminateMapper.queryOcOrderLineById(orderId, orderLineId);
+                
+                if (line != null && line.getUserId() != null) { // sn_user_id stored as userId in bean
+                     Long userId = line.getUserId();
+                     
+                     // 2.4.1 判断此号码用户状态
+                     LocalDate ceaseDate = null;
+                     TfFUserSvcState svcState = creditTerminateMapper.getUserCeaseSvcState(userId);
+                     if (svcState != null) {
+                         ceaseDate = svcState.getStartDate().toLocalDate();
+                     } else {
+                         // 2.4.2 否则查询是否有在途拆机单
+                         List<OcOrderLine> inFlightLines = creditTerminateMapper.getInFlightCeaseOrderLines(userId);
+                         if (inFlightLines != null && !inFlightLines.isEmpty()) {
+                             OcOrderLine inFlightLine = inFlightLines.get(0);
+                             ceaseDate = creditTerminateMapper.getOrderLineSrd(inFlightLine.getOrderId(), inFlightLine.getOrderLineId());
+                         }
+                     }
+                     
+                     // 2.4.3
+                     if (ceaseDate != null) {
+                         // SRD 取值逻辑
+                         LocalDate srd = calculateSRD(userId, null); // 传递 null 因为逻辑内部会查询 brandCode 或关系，或者我们需要在此处先查询
+                         
+                         // 模拟下信控拆机订单
+                         createCreditTerminateOrder(line, srd, ceaseDate);
+                     }
+                }
+            }
+        }
+        
+        // 逻辑 3: 查询 oc_order_line_item 是否有 attr_code='is_allow_amend' + attr_value='N'
+        List<OrderLineItem> amendItems = creditTerminateMapper.queryOrderLineItemsWithValue(orderId, "is_allow_amend", "N");
+        if (amendItems != null && !amendItems.isEmpty()) {
+            for (OrderLineItem item : amendItems) {
+                // 修改 attr_value='Y'
+                creditTerminateMapper.updateOrderLineItemValue(orderId, item.getOrderLineId(), "is_allow_amend", "Y");
+            }
+        }
+    }
+
+    private void createCreditTerminateOrder(OcOrderLine sourceLine, LocalDate srd, LocalDate ceaseDate) {
+         // 模拟下信控拆机订单
+         // TRADE_STAFF_ID=system
+         // serial_number, net_type_code, sn_cust_id, sn_user_id 从 sourceLine 获取
+         // SRD=系统时间取整到天 (注意：feedback说 SRD=系统时间取整到天，但前面又有一段关于 SRD 取值逻辑的描述 T+1/T+5。这看起来是冲突的。
+         // 根据反馈文本: "SRD 取值逻辑 ... 模拟下信控拆机订单 ... SRD=系统时间取整到天"
+         // 可能是指订单上的 SRD 字段设为 Sysdate，但在此过程中计算出的 T+1/T+5 用于其他用途？
+         // 或者 feedback 中的 "SRD=系统时间取整到天" 是最终写入订单的值，而前面的计算是为了验证？
+         // 通常信控拆机是立即生效，所以 SRD=Sysdate 合理。
+         // 但为了保险，我将按反馈的最后一句执行： "SRD=系统时间取整到天"
+         
+         // 修正：2.4.3 开头说了 "SRD 取值逻辑"，然后下面接着说 "模拟下信控拆机订单... SRD=系统时间取整到天"。
+         // 可能 T+1/T+5 是用于计算 cease date 如果是新单？或者反馈描述有点混乱。
+         // 考虑到 "Cease Rental Date 为停机时间... attr_value=步骤2.4.1 或2.4.2 的值"，
+         // 而 ORDER_LINE_ATTR_INFO 节点下增加 attr_code='Cease Rental Date' attr_value='...'
+         
+         // 我将使用 LocalDate.now() 作为订单的 SRD。
+         
+         System.out.println("Creating Credit Terminate Order for User: " + sourceLine.getUserId());
+         System.out.println("  - Trade Type: 7230");
+         System.out.println("  - SRD: " + LocalDate.now());
+         System.out.println("  - Cease Rental Date: " + ceaseDate);
+         
+         // 实际逻辑中这里应该调用订单创建接口
+    }
 }

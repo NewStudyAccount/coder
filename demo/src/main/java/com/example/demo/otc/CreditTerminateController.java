@@ -43,4 +43,27 @@ public class CreditTerminateController {
             this.orderLineId = orderLineId;
         }
     }
+    
+    @PostMapping("/process-completion")
+    public ResponseEntity<?> processCompletionMessage(@RequestBody CompletionRequest request) {
+        try {
+            creditTerminateService.processCompletionMessage(request.getOrderId());
+            return ResponseEntity.ok("竣工消息处理成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("处理失败: " + e.getMessage());
+        }
+    }
+    
+    public static class CompletionRequest {
+        private Long orderId;
+        
+        public Long getOrderId() {
+            return orderId;
+        }
+        
+        public void setOrderId(Long orderId) {
+            this.orderId = orderId;
+        }
+    }
 }

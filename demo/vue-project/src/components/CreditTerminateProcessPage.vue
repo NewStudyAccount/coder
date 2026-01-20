@@ -57,9 +57,22 @@
           </li>
         </ul>
       </div>
-       <div v-else>
+      <div v-else>
         <p>无跳过处理的用户</p>
       </div>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <h2>信控竣工消息处理 (模拟)</h2>
+    <div class="form-container">
+      <div class="form-item">
+        <label>竣工订单ID (Completion Order ID):</label>
+        <input v-model="completionForm.orderId" type="text" placeholder="请输入订单ID" />
+      </div>
+      <button @click="submitCompletion" :disabled="completionLoading">
+        {{ completionLoading ? '处理中...' : '提交处理' }}
+      </button>
     </div>
   </div>
 </template>
@@ -73,7 +86,11 @@ export default {
         orderId: '',
         orderLineId: ''
       },
+      completionForm: {
+        orderId: ''
+      },
       loading: false,
+      completionLoading: false,
       message: '',
       messageType: 'info',
       resultData: null
@@ -120,6 +137,39 @@ export default {
     showMessage(text, type) {
       this.message = text;
       this.messageType = type;
+    },
+    submitCompletion() {
+      if (!this.completionForm.orderId) {
+        this.showMessage('请输入竣工订单ID', 'error');
+        return;
+      }
+
+      this.completionLoading = true;
+      this.message = '';
+      
+      fetch('http://localhost:8080/api/credit-terminate/process-completion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          orderId: Number(this.completionForm.orderId)
+        })
+      })
+      .then(async response => {
+        const text = await response.text();
+        if (response.ok) {
+          this.showMessage(text, 'success');
+        } else {
+          this.showMessage(text, 'error');
+        }
+      })
+      .catch(error => {
+        this.showMessage('请求失败: ' + error.message, 'error');
+      })
+      .finally(() => {
+        this.completionLoading = false;
+      });
     }
   }
 };
