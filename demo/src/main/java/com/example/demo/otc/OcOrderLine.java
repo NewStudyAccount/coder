@@ -22,6 +22,17 @@ public class OcOrderLine {
     private String mainProductName;
     private String mainProductType;
     private String productFamily;
+    
+    // Additional fields for ChangePrimaryNumber
+    private String departId;
+    private String channelId;
+    private String channelType;
+    private String cityCode;
+    private String eparchyCode;
+    private String provinceCode;
+    private java.time.LocalDateTime acceptDate;
+    private java.time.LocalDateTime updateTime;
+    private String inModeCode;
 
     public Long getOrderId() {
         return orderId;
@@ -173,5 +184,77 @@ public class OcOrderLine {
 
     public void setProductFamily(String productFamily) {
         this.productFamily = productFamily;
+    }
+
+    public String getDepartId() {
+        return departId;
+    }
+
+    public void setDepartId(String departId) {
+        this.departId = departId;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public String getChannelType() {
+        return channelType;
+    }
+
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getEparchyCode() {
+        return eparchyCode;
+    }
+
+    public void setEparchyCode(String eparchyCode) {
+        this.eparchyCode = eparchyCode;
+    }
+
+    public String getProvinceCode() {
+        return provinceCode;
+    }
+
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
+    }
+
+    public java.time.LocalDateTime getAcceptDate() {
+        return acceptDate;
+    }
+
+    public void setAcceptDate(java.time.LocalDateTime acceptDate) {
+        this.acceptDate = acceptDate;
+    }
+
+    public java.time.LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(java.time.LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getInModeCode() {
+        return inModeCode;
+    }
+
+    public void setInModeCode(String inModeCode) {
+        this.inModeCode = inModeCode;
     }
 }
