@@ -13,10 +13,10 @@ public class CreditTerminateController {
     private CreditTerminateService creditTerminateService;
 
     @PostMapping("/process")
-    public ResponseEntity<String> processCreditTerminate(@RequestBody CreditTerminateRequest request) {
+    public ResponseEntity<?> processCreditTerminate(@RequestBody CreditTerminateRequest request) {
         try {
-            creditTerminateService.processCreditTerminate(request.getOrderId(), request.getOrderLineId());
-            return ResponseEntity.ok("信控拆机业务处理成功");
+            CreditTerminateResult result = creditTerminateService.processCreditTerminate(request.getOrderId(), request.getOrderLineId());
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("处理失败: " + e.getMessage());

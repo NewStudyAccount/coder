@@ -18,6 +18,49 @@
     <div v-if="message" :class="['message', messageType]">
       {{ message }}
     </div>
+
+    <div v-if="resultData" class="result-container">
+      <h3>处理结果</h3>
+      
+      <div v-if="resultData.cancelOrderDetailList && resultData.cancelOrderDetailList.length > 0">
+        <h4>需撤销订单明细 (Cancel Order Detail List)</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Serial Number</th>
+              <th>Order ID</th>
+              <th>Order Line ID</th>
+              <th>Trade Type Code</th>
+              <th>SRD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in resultData.cancelOrderDetailList" :key="index">
+              <td>{{ item.serialNumber }}</td>
+              <td>{{ item.orderId }}</td>
+              <td>{{ item.orderLineId }}</td>
+              <td>{{ item.tradeTypeCode }}</td>
+              <td>{{ item.srd }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-else>
+        <p>无撤单明细</p>
+      </div>
+
+      <div v-if="resultData.notProcessSNList && resultData.notProcessSNList.length > 0">
+        <h4>不处理用户列表 (Not Process SN List)</h4>
+        <ul>
+          <li v-for="(userId, index) in resultData.notProcessSNList" :key="index">
+            User ID: {{ userId }}
+          </li>
+        </ul>
+      </div>
+       <div v-else>
+        <p>无跳过处理的用户</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,7 +75,8 @@ export default {
       },
       loading: false,
       message: '',
-      messageType: 'info'
+      messageType: 'info',
+      resultData: null
     };
   },
   methods: {
@@ -44,6 +88,7 @@ export default {
 
       this.loading = true;
       this.message = '';
+      this.resultData = null;
 
       fetch('http://localhost:8080/api/credit-terminate/process', {
         method: 'POST',
@@ -56,10 +101,12 @@ export default {
         })
       })
       .then(async response => {
-        const text = await response.text();
         if (response.ok) {
-          this.showMessage(text, 'success');
+          const data = await response.json();
+          this.resultData = data;
+          this.showMessage(data.message || '处理成功', 'success');
         } else {
+          const text = await response.text();
           this.showMessage(text, 'error');
         }
       })
@@ -143,5 +190,27 @@ button:disabled {
 .info {
   background-color: #f4f4f5;
   color: #909399;
+}
+
+.result-container {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
 }
 </style>

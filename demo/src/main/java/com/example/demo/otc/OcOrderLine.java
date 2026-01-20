@@ -15,6 +15,13 @@ public class OcOrderLine {
     private String sceneType;
     private String parentSerialNumber;
     private Long custId;
+    
+    // Added fields
+    private Long userId;
+    private String mainProductId;
+    private String mainProductName;
+    private String mainProductType;
+    private String productFamily;
 
     public Long getOrderId() {
         return orderId;
@@ -126,5 +133,45 @@ public class OcOrderLine {
 
     public void setCustId(Long custId) {
         this.custId = custId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getMainProductId() {
+        return mainProductId;
+    }
+
+    public void setMainProductId(String mainProductId) {
+        this.mainProductId = mainProductId;
+    }
+
+    public String getMainProductName() {
+        return mainProductName;
+    }
+
+    public void setMainProductName(String mainProductName) {
+        this.mainProductName = mainProductName;
+    }
+
+    public String getMainProductType() {
+        return mainProductType;
+    }
+
+    public void setMainProductType(String mainProductType) {
+        this.mainProductType = mainProductType;
+    }
+
+    public String getProductFamily() {
+        return productFamily;
+    }
+
+    public void setProductFamily(String productFamily) {
+        this.productFamily = productFamily;
     }
 }
