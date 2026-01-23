@@ -13,6 +13,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/register")
+    public Map<String, Object> register(@RequestBody User user) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            userService.register(user);
+            result.put("code", 0);
+            result.put("msg", "success");
+        } catch (Exception e) {
+            result.put("code", 400);
+            result.put("msg", e.getMessage());
+        }
+        return result;
+    }
+
     @GetMapping("/user/info")
     public Map<String, Object> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

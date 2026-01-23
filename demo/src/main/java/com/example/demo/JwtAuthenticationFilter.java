@@ -16,11 +16,13 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtCacheService jwtCacheService;
+    private final JwtCacheService jwtCacheService;
+
+    public JwtAuthenticationFilter(JwtCacheService jwtCacheService) {
+        this.jwtCacheService = jwtCacheService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
