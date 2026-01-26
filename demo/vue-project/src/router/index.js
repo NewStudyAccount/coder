@@ -16,6 +16,7 @@ import ChangeGroupProcessPage from '../components/ChangeGroupProcessPage.vue'
 import AddHuntingProcessPage from '../components/AddHuntingProcessPage.vue'
 import CreditTerminateProcessPage from '../components/CreditTerminateProcessPage.vue'
 import CreditControlSuspendPage from '../components/CreditControlSuspendPage.vue'
+import GroupMemberTermination from '../components/GroupMemberTermination.vue'
 import WebFluxDemo from '../components/WebFluxDemo.vue'
 
 const routes = [
@@ -44,6 +45,8 @@ const routes = [
   { path: '/credit-terminate', name: 'credit-terminate-process', component: CreditTerminateProcessPage },
   // 信控停机业务处理演示
   { path: '/credit-control-suspend', name: 'credit-control-suspend', component: CreditControlSuspendPage },
+  // 群组成员拆机增补业务处理演示
+  { path: '/group-member-termination', name: 'group-member-termination', component: GroupMemberTermination },
   // WebFlux 演示
   { path: '/webflux', name: 'webflux-demo', component: WebFluxDemo },
 ]

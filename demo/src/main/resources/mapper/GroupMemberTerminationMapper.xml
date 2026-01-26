@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.otc.GroupMemberTerminationMapper">
+
+    <select id="queryOrderLine" resultType="com.example.demo.otc.OcOrderLine">
+        SELECT * FROM oc_order_line
+        WHERE order_id = #{orderId}
+          AND trade_type_code = #{tradeTypeCode}
+          AND line_level = #{lineLevel}
+          AND parent_serial_number = #{parentSerialNumber}
+    </select>
+
+    <select id="getOrderLine" resultType="com.example.demo.otc.OcOrderLine">
+        SELECT * FROM oc_order_line
+        WHERE order_id = #{orderId} AND order_line_id = #{orderLineId}
+    </select>
+
+    <select id="queryOrderProduct" resultType="com.example.demo.otc.OcOrderProduct">
+        SELECT * FROM oc_order_product
+        WHERE order_id = #{orderId} AND order_line_id = #{orderLineId}
+    </select>
+
+    <select id="queryOrderProductItems" resultType="com.example.demo.otc.OcOrderProductItem">
+        SELECT * FROM oc_order_product_item
+        WHERE order_id = #{orderId} AND prod_item_id = #{prodItemId}
+    </select>
+
+    <select id="queryOrderElements" resultType="com.example.demo.otc.OcOrderElement">
+        SELECT * FROM oc_order_element
+        WHERE order_id = #{orderId} 
+          AND order_line_id = #{orderLineId}
+          AND prod_item_id = #{prodItemId}
+    </select>
+
+    <select id="queryOrderElementItems" resultType="com.example.demo.otc.OcOrderElementItem">
+        SELECT * FROM oc_order_element_item
+        WHERE order_id = #{orderId} AND element_item_id = #{elementItemId}
+    </select>
+
+    <select id="queryGroupMembers" resultType="com.example.demo.otc.TfFUserRelation">
+        SELECT * FROM tf_f_user_relation
+        WHERE user_id_a = #{primaryUserId}
+          AND end_date > NOW()
+    </select>
+
+    <select id="checkMemberOrder" resultType="com.example.demo.otc.OcOrderLine">
+        SELECT * FROM oc_order_line
+        WHERE order_id = #{orderId}
+          AND sn_user_id = #{userId}
+          AND trade_type_code = #{tradeTypeCode}
+          AND parent_serial_number = #{parentSerialNumber}
+    </select>
+
+    <select id="getUserInfo" resultType="com.example.demo.otc.TfFUser">
+        SELECT * FROM tf_f_user WHERE user_id = #{userId}
+    </select>
+    
+    <select id="getUserDiffCode" resultType="java.lang.String">
+        SELECT user_diff_code FROM tf_f_user WHERE user_id = #{userId}
+    </select>
+
+    <select id="queryHuntingUsers" resultType="com.example.demo.otc.TfFUser">
+        SELECT u.* FROM tf_f_user u
+        JOIN tf_f_user_relation r ON u.user_id = r.user_id_b 
+        WHERE r.rsrv_value = CAST(#{userId} AS CHAR)
+          AND r.rsrv_value_code = 'citinet_grp_user_id'
+          AND r.end_date > NOW()
+    </select>
+
+    <insert id="insertOrderLine">
+        INSERT INTO oc_order_line (order_id, order_line_id, serial_number, sn_user_id, trade_type_code, line_level, parent_serial_number, srd, net_type_code, scene_type)
+        VALUES (#{orderId}, #{orderLineId}, #{serialNumber}, #{snUserId}, #{tradeTypeCode}, #{lineLevel}, #{parentSerialNumber}, #{srd}, #{netTypeCode}, #{sceneType})
+    </insert>
+    
+    <insert id="insertOrderProduct">
+        INSERT INTO oc_order_product (order_id, order_line_id, prod_item_id, product_id, product_type_code)
+        VALUES (#{orderId}, #{orderLineId}, #{prodItemId}, #{productId}, #{productTypeCode})
+    </insert>
+    
+    <insert id="insertOrderProductItem">
+        INSERT INTO oc_order_product_item (order_id, prod_item_id, attr_code, attr_value)
+        VALUES (#{orderId}, #{prodItemId}, #{attrCode}, #{attrValue})
+    </insert>
+    
+    <insert id="insertOrderElement">
+        INSERT INTO oc_order_element (order_id, order_line_id, element_item_id, prod_item_id, element_id)
+        VALUES (#{orderId}, #{orderLineId}, #{elementItemId}, #{prodItemId}, #{elementId})
+    </insert>
+    
+    <insert id="insertOrderElementItem">
+        INSERT INTO oc_order_element_item (order_id, element_item_id, attr_code, attr_value)
+        VALUES (#{orderId}, #{elementItemId}, #{attrCode}, #{attrValue})
+    </insert>
+
+    <select id="queryGroupCompletionOrder" resultType="com.example.demo.otc.OcOrderLine">
+        SELECT * FROM oc_order_line
+        WHERE order_id = #{orderId}
+          AND trade_type_code = #{tradeTypeCode}
+          AND line_level = #{lineLevel}
+          AND net_type_code = #{netTypeCode}
+    </select>
+
+</mapper>
