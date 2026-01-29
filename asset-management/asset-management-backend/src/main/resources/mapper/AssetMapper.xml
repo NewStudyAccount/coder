@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asset.management.mapper.AssetMapper">
+
+    <resultMap id="AssetResultMap" type="com.asset.management.entity.Asset">
+        <id property="id" column="id"/>
+        <result property="assetCode" column="asset_code"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="specifications" column="specifications"/>
+        <result property="unit" column="unit"/>
+        <result property="purchaseDate" column="purchase_date"/>
+        <result property="purchasePrice" column="purchase_price"/>
+        <result property="supplier" column="supplier"/>
+        <result property="warrantyPeriod" column="warranty_period"/>
+        <result property="status" column="status"/>
+        <result property="location" column="location"/>
+        <result property="responsiblePerson" column="responsible_person"/>
+        <result property="description" column="description"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 查询所有资产（带分类名称） -->
+    <select id="findAll" resultMap="AssetResultMap">
+        SELECT a.*, c.category_name
+        FROM asset_info a
+        LEFT JOIN asset_category c ON a.category_id = c.id
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 根据ID查询资产 -->
+    <select id="findById" resultMap="AssetResultMap">
+        SELECT a.*, c.category_name
+        FROM asset_info a
+        LEFT JOIN asset_category c ON a.category_id = c.id
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 条件查询资产 -->
+    <select id="findByCondition" resultMap="AssetResultMap">
+        SELECT a.*, c.category_name
+        FROM asset_info a
+        LEFT JOIN asset_category c ON a.category_id = c.id
+        <where>
+            <if test="assetName != null and assetName != ''">
+                AND a.asset_name LIKE CONCAT('%', #{assetName}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND a.category_id = #{categoryId}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 新增资产 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO asset_info (
+            asset_code, asset_name, category_id, specifications, unit,
+            purchase_date, purchase_price, supplier, warranty_period,
+            status, location, responsible_person, description, image_url, create_by
+        ) VALUES (
+            #{assetCode}, #{assetName}, #{categoryId}, #{specifications}, #{unit},
+            #{purchaseDate}, #{purchasePrice}, #{supplier}, #{warrantyPeriod},
+            #{status}, #{location}, #{responsiblePerson}, #{description}, #{imageUrl}, #{createBy}
+        )
+    </insert>
+
+    <!-- 更新资产 -->
+    <update id="update">
+        UPDATE asset_info
+        <set>
+            <if test="assetName != null">asset_name = #{assetName},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="specifications != null">specifications = #{specifications},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>
+            <if test="supplier != null">supplier = #{supplier},</if>
+            <if test="warrantyPeriod != null">warranty_period = #{warrantyPeriod},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="responsiblePerson != null">responsible_person = #{responsiblePerson},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除资产 -->
+    <delete id="delete">
+        DELETE FROM asset_info WHERE id = #{id}
+    </delete>
+
+    <!-- 统计各状态资产数量 -->
+    <select id="countByStatus" resultType="map">
+        SELECT status, COUNT(*) as count
+        FROM asset_info
+        GROUP BY status
+    </select>
+
+    <!-- 统计各分类资产数量 -->
+    <select id="countByCategory" resultType="map">
+        SELECT c.category_name, COUNT(a.id) as count
+        FROM asset_category c
+        LEFT JOIN asset_info a ON c.id = a.category_id
+        WHERE c.status = 1
+        GROUP BY c.id, c.category_name
+        ORDER BY count DESC
+    </select>
+
+</mapper>
