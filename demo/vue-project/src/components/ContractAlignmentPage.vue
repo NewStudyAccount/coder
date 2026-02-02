@@ -14,14 +14,6 @@
           <span class="section-title">单个订单对齐</span>
         </template>
         
-        <el-form :model="singleForm" :rules="singleRules" ref="singleFormRef" label-width="140px">
-          <el-form-item label="订单ID" prop="orderId">
-            <el-input 
-              v-model="singleForm.orderId" 
-              placeholder="请输入订单ID"
-              clearable
-            />
-          </el-form-item>
 
           <el-form-item label="订单行ID" prop="orderLineId">
             <el-input 
