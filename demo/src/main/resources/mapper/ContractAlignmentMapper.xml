@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ContractAlignmentMapper">
+
+    <resultMap id="OcOrderProductMap" type="com.example.demo.entity.OcOrderProduct">
+        <result property="orderId" column="order_id"/>
+        <result property="orderLineId" column="order_line_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="prodItemId" column="prod_item_id"/>
+        <result property="modifyTag" column="modify_tag"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+    </resultMap>
+
+    <resultMap id="OcOrderProductElementMap" type="com.example.demo.entity.OcOrderProductElement">
+        <result property="orderId" column="order_id"/>
+        <result property="orderLineId" column="order_line_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="prodItemId" column="prod_item_id"/>
+        <result property="elementId" column="element_id"/>
+        <result property="elementItemId" column="element_item_id"/>
+        <result property="elementTypeCode" column="element_type_code"/>
+        <result property="isMainElement" column="is_main_element"/>
+        <result property="modifyTag" column="modify_tag"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+    </resultMap>
+
+    <resultMap id="OcOrderElementItemMap" type="com.example.demo.entity.OcOrderElementItem">
+        <result property="orderId" column="order_id"/>
+        <result property="orderLineId" column="order_line_id"/>
+        <result property="elementId" column="element_id"/>
+        <result property="elementItemId" column="element_item_id"/>
+        <result property="elementTypeCode" column="element_type_code"/>
+        <result property="attrCode" column="attr_code"/>
+        <result property="attrValue" column="attr_value"/>
+        <result property="modifyTag" column="modify_tag"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+    </resultMap>
+
+    <!-- 查询新增产品列表 -->
+    <select id="queryNewProducts" resultMap="OcOrderProductMap">
+        SELECT order_id, order_line_id, product_id, prod_item_id, modify_tag, start_date, end_date
+        FROM oc_order_product
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND modify_tag = #{modifyTag}
+    </select>
+
+    <!-- 查询主资费元素 -->
+    <select id="queryMainElement" resultMap="OcOrderProductElementMap">
+        SELECT order_id, order_line_id, product_id, prod_item_id, element_id, element_item_id,
+               element_type_code, is_main_element, modify_tag, start_date, end_date
+        FROM oc_order_product_element
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND product_id = #{productId}
+          AND prod_item_id = #{prodItemId}
+          AND element_type_code = #{elementTypeCode}
+          AND modify_tag = #{modifyTag}
+          AND is_main_element = #{isMainElement}
+        LIMIT 1
+    </select>
+
+    <!-- 查询元素属性 -->
+    <select id="queryElementItem" resultMap="OcOrderElementItemMap">
+        SELECT order_id, order_line_id, element_id, element_item_id, element_type_code,
+               attr_code, attr_value, modify_tag, start_date, end_date
+        FROM oc_order_element_item
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND element_id = #{elementId}
+          AND element_item_id = #{elementItemId}
+          AND attr_code = #{attrCode}
+          AND modify_tag = #{modifyTag}
+    </select>
+
+    <!-- 查询多个属性 -->
+    <select id="queryElementItems" resultMap="OcOrderElementItemMap">
+        SELECT order_id, order_line_id, element_id, element_item_id, element_type_code,
+               attr_code, attr_value, modify_tag, start_date, end_date
+        FROM oc_order_element_item
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND element_id = #{elementId}
+          AND element_item_id = #{elementItemId}
+          AND modify_tag = #{modifyTag}
+          AND attr_code IN
+        <foreach collection="attrCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <!-- 查询非主资费元素列表 -->
+    <select id="queryNonMainElements" resultMap="OcOrderProductElementMap">
+        SELECT order_id, order_line_id, product_id, prod_item_id, element_id, element_item_id,
+               element_type_code, is_main_element, modify_tag, start_date, end_date
+        FROM oc_order_product_element
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND product_id = #{productId}
+          AND prod_item_id = #{prodItemId}
+          AND element_type_code = #{elementTypeCode}
+          AND modify_tag = #{modifyTag}
+          AND is_main_element = #{isMainElement}
+    </select>
+
+    <!-- 插入元素属性 -->
+    <insert id="insertElementItem">
+        INSERT INTO oc_order_element_item
+        (order_id, order_line_id, element_id, element_item_id, element_type_code,
+         attr_code, attr_value, modify_tag, start_date, end_date)
+        VALUES
+        (#{orderId}, #{orderLineId}, #{elementId}, #{elementItemId}, #{elementTypeCode},
+         #{attrCode}, #{attrValue}, #{modifyTag}, #{startDate}, #{endDate})
+    </insert>
+
+    <!-- 更新元素属性 -->
+    <update id="updateElementItem">
+        UPDATE oc_order_element_item
+        SET attr_value = #{attrValue}
+        WHERE order_id = #{orderId}
+          AND order_line_id = #{orderLineId}
+          AND element_id = #{elementId}
+          AND element_item_id = #{elementItemId}
+          AND attr_code = #{attrCode}
+          AND modify_tag = #{modifyTag}
+    </update>
+
+    <!-- 批量插入元素属性 -->
+    <insert id="batchInsertElementItems">
+        INSERT INTO oc_order_element_item
+        (order_id, order_line_id, element_id, element_item_id, element_type_code,
+         attr_code, attr_value, modify_tag, start_date, end_date)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.orderId}, #{item.orderLineId}, #{item.elementId}, #{item.elementItemId}, #{item.elementTypeCode},
+             #{item.attrCode}, #{item.attrValue}, #{item.modifyTag}, #{item.startDate}, #{item.endDate})
+        </foreach>
+    </insert>
+
+</mapper>
