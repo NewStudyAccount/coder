@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import org.springframework.stereotype.Component;
+import java.util.Map;
 
 /**
  * 雪花算法(Snowflake)分布式ID生成器
@@ -36,7 +36,6 @@ import org.springframework.stereotype.Component;
  * @author AI Commander
  * @since 2026-02-02
  */
-@Component
 public class SnowflakeIdWorker {
 
     // ==============================常量定义==============================
@@ -185,6 +184,24 @@ public class SnowflakeIdWorker {
     // ==============================解析方法==============================
     
     /**
+     * 获取工作机器ID
+     * 
+     * @return 工作机器ID
+     */
+    public long getWorkerId() {
+        return workerId;
+    }
+    
+    /**
+     * 获取数据中心ID
+     * 
+     * @return 数据中心ID
+     */
+    public long getDatacenterId() {
+        return datacenterId;
+    }
+    
+    /**
      * 解析雪花ID
      * 
      * @param id 雪花ID
@@ -197,6 +214,24 @@ public class SnowflakeIdWorker {
         long sequence = id & MAX_SEQUENCE;
         
         return new SnowflakeIdInfo(id, timestamp, datacenterId, workerId, sequence);
+    }
+    
+    /**
+     * 解析雪花ID并返回Map格式
+     * 
+     * @param id 雪花ID
+     * @return ID信息Map
+     */
+    public Map<String, Object> parseId(Long id) {
+        SnowflakeIdInfo info = parseId(id.longValue());
+        Map<String, Object> result = new java.util.HashMap<>();
+        result.put("originalId", info.getId());
+        result.put("timestamp", info.getTimestamp());
+        result.put("timestampStr", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(info.getTimestamp())));
+        result.put("datacenterId", info.getDatacenterId());
+        result.put("workerId", info.getWorkerId());
+        result.put("sequence", info.getSequence());
+        return result;
     }
     
     // ==============================内部类==============================
