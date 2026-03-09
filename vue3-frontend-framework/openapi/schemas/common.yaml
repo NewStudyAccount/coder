@@ -1,0 +1,112 @@
+# 通用数据模型定义
+
+SuccessResponse:
+  type: object
+  description: 通用成功响应
+  properties:
+    code:
+      type: integer
+      description: 响应代码
+      example: 200
+    message:
+      type: string
+      description: 响应消息
+      example: 操作成功
+    data:
+      type: object
+      nullable: true
+      description: 响应数据
+
+ErrorResponse:
+  type: object
+  description: 通用错误响应
+  properties:
+    code:
+      type: integer
+      description: 错误代码
+      example: 400
+    message:
+      type: string
+      description: 错误消息
+      example: 请求参数错误
+    error:
+      type: string
+      description: 详细错误信息
+      example: 参数验证失败
+
+PaginationRequest:
+  type: object
+  description: 分页请求参数
+  properties:
+    page:
+      type: integer
+      description: 页码
+      default: 1
+      minimum: 1
+      example: 1
+    pageSize:
+      type: integer
+      description: 每页数量
+      default: 10
+      minimum: 1
+      maximum: 100
+      example: 10
+    keyword:
+      type: string
+      description: 搜索关键词
+      example: 搜索内容
+
+PaginationResponse:
+  type: object
+  description: 分页响应数据
+  properties:
+    total:
+      type: integer
+      description: 总记录数
+      example: 100
+    page:
+      type: integer
+      description: 当前页码
+      example: 1
+    pageSize:
+      type: integer
+      description: 每页数量
+      example: 10
+    totalPages:
+      type: integer
+      description: 总页数
+      example: 10
+    hasNext:
+      type: boolean
+      description: 是否有下一页
+      example: true
+    hasPrev:
+      type: boolean
+      description: 是否有上一页
+      example: false
+
+IdParameter:
+  type: string
+  description: 通用ID参数
+  example: "1234567890"
+
+TimestampFields:
+  type: object
+  description: 时间戳字段
+  properties:
+    createdAt:
+      type: string
+      format: date-time
+      description: 创建时间
+      example: "2024-01-01T00:00:00Z"
+    updatedAt:
+      type: string
+      format: date-time
+      description: 更新时间
+      example: "2024-01-15T12:00:00Z"
+    deletedAt:
+      type: string
+      format: date-time
+      nullable: true
+      description: 删除时间（软删除）
+      example: null

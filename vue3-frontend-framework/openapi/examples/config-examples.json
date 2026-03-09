@@ -1,0 +1,101 @@
+{
+  "getSystemSettingsResponse": {
+    "code": 200,
+    "message": "获取成功",
+    "data": {
+      "siteName": "Vue3前端框架",
+      "siteDescription": "基于Vue3 + Vue Router + Pinia + Element-UI的现代化前端框架",
+      "logo": "https://example.com/logo.png",
+      "theme": "light",
+      "language": "zh-CN",
+      "enableRegistration": true,
+      "maintenanceMode": false
+    }
+  },
+  "updateSystemSettingsRequest": {
+    "siteName": "Vue3企业级前端框架",
+    "siteDescription": "专业的企业级前端解决方案",
+    "logo": "https://example.com/new-logo.png",
+    "theme": "dark",
+    "language": "zh-CN",
+    "enableRegistration": false,
+    "maintenanceMode": false
+  },
+  "updateSystemSettingsResponse": {
+    "code": 200,
+    "message": "更新成功",
+    "data": {
+      "siteName": "Vue3企业级前端框架",
+      "siteDescription": "专业的企业级前端解决方案",
+      "logo": "https://example.com/new-logo.png",
+      "theme": "dark",
+      "language": "zh-CN",
+      "enableRegistration": false,
+      "maintenanceMode": false
+    }
+  },
+  "themeOptions": {
+    "light": {
+      "name": "浅色主题",
+      "description": "适合白天使用的明亮主题",
+      "primaryColor": "#409EFF",
+      "backgroundColor": "#FFFFFF"
+    },
+    "dark": {
+      "name": "深色主题",
+      "description": "适合夜间使用的暗黑主题",
+      "primaryColor": "#409EFF",
+      "backgroundColor": "#1A1A1A"
+    },
+    "auto": {
+      "name": "自动主题",
+      "description": "根据系统设置自动切换主题",
+      "primaryColor": "#409EFF",
+      "backgroundColor": "auto"
+    }
+  },
+  "languageOptions": [
+    {
+      "code": "zh-CN",
+      "name": "简体中文",
+      "nativeName": "简体中文"
+    },
+    {
+      "code": "zh-TW",
+      "name": "繁體中文",
+      "nativeName": "繁體中文"
+    },
+    {
+      "code": "en-US",
+      "name": "English",
+      "nativeName": "English"
+    },
+    {
+      "code": "ja-JP",
+      "name": "日本語",
+      "nativeName": "日本語"
+    },
+    {
+      "code": "ko-KR",
+      "name": "한국어",
+      "nativeName": "한국어"
+    }
+  ],
+  "errorResponses": {
+    "unauthorized": {
+      "code": 401,
+      "message": "未授权",
+      "error": "请先登录"
+    },
+    "forbidden": {
+      "code": 403,
+      "message": "权限不足",
+      "error": "只有管理员才能修改系统配置"
+    },
+    "validationError": {
+      "code": 400,
+      "message": "请求参数错误",
+      "error": "主题配置值必须是 light、dark 或 auto"
+    }
+  }
+}

@@ -1,0 +1,393 @@
+# 用户相关数据模型定义
+
+components:
+  schemas:
+    # 用户完整信息
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 用户ID
+          example: "1001"
+        username:
+          type: string
+          description: 用户名
+          example: admin
+        email:
+          type: string
+          format: email
+          description: 邮箱地址
+          example: admin@example.com
+        phone:
+          type: string
+          description: 手机号码
+          example: "13800138000"
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+          example: https://example.com/avatar/admin.jpg
+        nickname:
+          type: string
+          description: 昵称
+          example: 管理员
+        realName:
+          type: string
+          description: 真实姓名
+          example: 张三
+        gender:
+          type: string
+          enum: [male, female, other]
+          description: 性别
+          example: male
+        birthday:
+          type: string
+          format: date
+          description: 生日
+          example: "1990-01-01"
+        bio:
+          type: string
+          description: 个人简介
+          maxLength: 500
+          example: 这是一段个人简介
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+          description: 用户角色列表
+        permissions:
+          type: array
+          items:
+            type: string
+          description: 用户权限列表
+          example: ["user:read", "user:write"]
+        status:
+          type: string
+          enum: [active, inactive, banned, pending]
+          description: 用户状态
+          example: active
+        emailVerified:
+          type: boolean
+          description: 邮箱是否已验证
+          example: true
+        phoneVerified:
+          type: boolean
+          description: 手机号是否已验证
+          example: false
+        lastLoginAt:
+          type: string
+          format: date-time
+          description: 最后登录时间
+          example: "2024-03-09T14:15:00Z"
+        lastLoginIp:
+          type: string
+          description: 最后登录IP
+          example: "192.168.1.100"
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新时间
+          example: "2024-03-09T14:15:00Z"
+
+    # 用户简要信息（用于列表展示）
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 用户ID
+          example: "1001"
+        username:
+          type: string
+          description: 用户名
+          example: admin
+        email:
+          type: string
+          format: email
+          description: 邮箱
+          example: admin@example.com
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+          example: https://example.com/avatar/admin.jpg
+        nickname:
+          type: string
+          description: 昵称
+          example: 管理员
+        status:
+          type: string
+          enum: [active, inactive, banned, pending]
+          description: 用户状态
+          example: active
+        roles:
+          type: array
+          items:
+            type: string
+          description: 角色名称列表
+          example: ["admin", "user"]
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-01-01T00:00:00Z"
+
+    # 用户资料
+    UserProfile:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: 昵称
+          maxLength: 50
+          example: 新昵称
+        realName:
+          type: string
+          description: 真实姓名
+          maxLength: 50
+          example: 李四
+        gender:
+          type: string
+          enum: [male, female, other]
+          description: 性别
+          example: female
+        birthday:
+          type: string
+          format: date
+          description: 生日
+          example: "1995-05-15"
+        phone:
+          type: string
+          description: 手机号码
+          pattern: '^1[3-9]\d{9}$'
+          example: "13900139000"
+        bio:
+          type: string
+          description: 个人简介
+          maxLength: 500
+          example: 更新后的个人简介
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+          example: https://example.com/avatar/new.jpg
+
+    # 更新用户请求
+    UpdateUserRequest:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: 昵称
+          maxLength: 50
+        realName:
+          type: string
+          description: 真实姓名
+          maxLength: 50
+        gender:
+          type: string
+          enum: [male, female, other]
+          description: 性别
+        birthday:
+          type: string
+          format: date
+          description: 生日
+        phone:
+          type: string
+          description: 手机号码
+          pattern: '^1[3-9]\d{9}$'
+        bio:
+          type: string
+          description: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+
+    # 用户列表响应
+    UserListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSummary'
+          description: 用户列表
+        pagination:
+          $ref: '../common.yaml#/components/schemas/PaginationResponse'
+
+    # 角色定义
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 角色ID
+          example: "1"
+        name:
+          type: string
+          description: 角色名称
+          example: admin
+        displayName:
+          type: string
+          description: 角色显示名称
+          example: 管理员
+        description:
+          type: string
+          description: 角色描述
+          example: 系统管理员，拥有所有权限
+        permissions:
+          type: array
+          items:
+            type: string
+          description: 角色权限列表
+          example: ["user:read", "user:write", "system:config"]
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-01-01T00:00:00Z"
+
+    # 用户统计信息
+    UserStatistics:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+          description: 总用户数
+          example: 1500
+        activeUsers:
+          type: integer
+          description: 活跃用户数
+          example: 1200
+        newUsersToday:
+          type: integer
+          description: 今日新增用户
+          example: 25
+        newUsersThisWeek:
+          type: integer
+          description: 本周新增用户
+          example: 150
+        newUsersThisMonth:
+          type: integer
+          description: 本月新增用户
+          example: 580
+        usersByRole:
+          type: object
+          additionalProperties:
+            type: integer
+          description: 按角色统计的用户数
+          example:
+            admin: 5
+            user: 1400
+            guest: 95
+        usersByStatus:
+          type: object
+          additionalProperties:
+            type: integer
+          description: 按状态统计的用户数
+          example:
+            active: 1200
+            inactive: 200
+            banned: 50
+            pending: 50
+
+    # 用户活动日志
+    UserActivityLog:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 日志ID
+          example: "10001"
+        userId:
+          type: string
+          description: 用户ID
+          example: "1001"
+        username:
+          type: string
+          description: 用户名
+          example: admin
+        action:
+          type: string
+          description: 操作类型
+          example: login
+        description:
+          type: string
+          description: 操作描述
+          example: 用户登录系统
+        ip:
+          type: string
+          description: IP地址
+          example: "192.168.1.100"
+        userAgent:
+          type: string
+          description: 用户代理
+          example: Mozilla/5.0...
+        metadata:
+          type: object
+          additionalProperties: true
+          description: 额外的元数据
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-03-09T14:15:00Z"
+
+    # 用户偏好设置
+    UserPreferences:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum: [light, dark, auto]
+          description: 主题设置
+          default: auto
+          example: dark
+        language:
+          type: string
+          description: 语言设置
+          default: zh-CN
+          example: zh-CN
+        timezone:
+          type: string
+          description: 时区设置
+          default: Asia/Shanghai
+          example: Asia/Shanghai
+        notifications:
+          type: object
+          properties:
+            email:
+              type: boolean
+              description: 是否接收邮件通知
+              default: true
+            sms:
+              type: boolean
+              description: 是否接收短信通知
+              default: false
+            push:
+              type: boolean
+              description: 是否接收推送通知
+              default: true
+        privacy:
+          type: object
+          properties:
+            showEmail:
+              type: boolean
+              description: 是否公开邮箱
+              default: false
+            showPhone:
+              type: boolean
+              description: 是否公开手机号
+              default: false
+            showBirthday:
+              type: boolean
+              description: 是否公开生日
+              default: true

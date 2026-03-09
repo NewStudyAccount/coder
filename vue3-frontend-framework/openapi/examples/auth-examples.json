@@ -1,0 +1,82 @@
+{
+  "loginRequest": {
+    "username": "admin",
+    "password": "admin123"
+  },
+  "loginResponse": {
+    "code": 200,
+    "message": "登录成功",
+    "data": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwNDEwMDAwMCwiZXhwIjoxNzA0MTAzNjAwfQ.signature",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3MDQxMDAwMDAsImV4cCI6MTcwNDcwNDgwMH0.signature",
+      "expiresIn": 3600,
+      "user": {
+        "id": "1234567890",
+        "username": "admin",
+        "email": "admin@example.com",
+        "nickname": "系统管理员",
+        "avatar": "https://example.com/avatars/admin.jpg",
+        "role": "admin",
+        "createdAt": "2024-01-01T00:00:00Z"
+      }
+    }
+  },
+  "registerRequest": {
+    "username": "newuser",
+    "password": "password123",
+    "email": "newuser@example.com",
+    "nickname": "新用户"
+  },
+  "registerResponse": {
+    "code": 201,
+    "message": "注册成功",
+    "data": {
+      "id": "0987654321",
+      "username": "newuser",
+      "email": "newuser@example.com",
+      "nickname": "新用户",
+      "avatar": "https://example.com/avatars/default.jpg",
+      "role": "user",
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  },
+  "refreshTokenRequest": {
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3MDQxMDAwMDAsImV4cCI6MTcwNDcwNDgwMH0.signature"
+  },
+  "refreshTokenResponse": {
+    "code": 200,
+    "message": "令牌刷新成功",
+    "data": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwNDEwMzYwMCwiZXhwIjoxNzA0MTA3MjAwfQ.newsignature",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3MDQxMDM2MDAsImV4cCI6MTcwNDcwODQwMH0.newsignature",
+      "expiresIn": 3600
+    }
+  },
+  "logoutResponse": {
+    "code": 200,
+    "message": "登出成功",
+    "data": null
+  },
+  "errorResponses": {
+    "invalidCredentials": {
+      "code": 401,
+      "message": "认证失败",
+      "error": "用户名或密码错误"
+    },
+    "userExists": {
+      "code": 409,
+      "message": "用户已存在",
+      "error": "该用户名已被注册"
+    },
+    "invalidToken": {
+      "code": 401,
+      "message": "令牌无效",
+      "error": "访问令牌已过期或无效"
+    },
+    "validationError": {
+      "code": 400,
+      "message": "请求参数错误",
+      "error": "密码长度不能少于6个字符"
+    }
+  }
+}

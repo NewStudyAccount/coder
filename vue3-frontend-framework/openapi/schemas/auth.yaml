@@ -1,0 +1,252 @@
+# 认证相关数据模型定义
+
+components:
+  schemas:
+    # 登录请求
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: 用户名或邮箱
+          minLength: 3
+          maxLength: 50
+          example: admin
+        password:
+          type: string
+          format: password
+          description: 登录密码
+          minLength: 6
+          maxLength: 50
+          example: admin123
+        rememberMe:
+          type: boolean
+          description: 是否记住登录状态
+          default: false
+          example: true
+        captcha:
+          type: string
+          description: 验证码（如果启用）
+          example: "ABCD"
+
+    # 登录响应
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: 访问令牌(JWT)
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: 刷新令牌
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        tokenType:
+          type: string
+          description: 令牌类型
+          default: Bearer
+          example: Bearer
+        expiresIn:
+          type: integer
+          description: 访问令牌过期时间（秒）
+          example: 3600
+        userInfo:
+          $ref: '#/components/schemas/UserBasicInfo'
+
+    # 注册请求
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          description: 用户名
+          minLength: 3
+          maxLength: 50
+          pattern: '^[a-zA-Z0-9_-]+$'
+          example: newuser
+        email:
+          type: string
+          format: email
+          description: 邮箱地址
+          example: newuser@example.com
+        password:
+          type: string
+          format: password
+          description: 登录密码
+          minLength: 6
+          maxLength: 50
+          example: password123
+        confirmPassword:
+          type: string
+          format: password
+          description: 确认密码
+          example: password123
+        phone:
+          type: string
+          description: 手机号码（可选）
+          pattern: '^1[3-9]\d{9}$'
+          example: "13800138000"
+        inviteCode:
+          type: string
+          description: 邀请码（如果需要）
+          example: INVITE2024
+        agreement:
+          type: boolean
+          description: 是否同意用户协议
+          example: true
+
+    # 注册响应
+    RegisterResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: 新创建的用户ID
+          example: "1001"
+        username:
+          type: string
+          description: 用户名
+          example: newuser
+        email:
+          type: string
+          description: 邮箱地址
+          example: newuser@example.com
+        createdAt:
+          type: string
+          format: date-time
+          description: 注册时间
+          example: "2024-03-09T14:15:00Z"
+        needVerification:
+          type: boolean
+          description: 是否需要邮箱验证
+          example: true
+
+    # 刷新令牌请求
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: 刷新令牌
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    # 刷新令牌响应
+    RefreshTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: 新的访问令牌
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: 新的刷新令牌（可选）
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        expiresIn:
+          type: integer
+          description: 令牌过期时间（秒）
+          example: 3600
+
+    # 修改密码请求
+    ChangePasswordRequest:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          description: 旧密码
+          example: oldpass123
+        newPassword:
+          type: string
+          format: password
+          description: 新密码
+          minLength: 6
+          maxLength: 50
+          example: newpass123
+        confirmPassword:
+          type: string
+          format: password
+          description: 确认新密码
+          example: newpass123
+
+    # 重置密码请求
+    ResetPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: 注册邮箱
+          example: user@example.com
+        captcha:
+          type: string
+          description: 验证码
+          example: "ABCD"
+
+    # 验证令牌
+    VerifyTokenRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          description: 待验证的令牌
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    # 用户基本信息（用于登录响应）
+    UserBasicInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 用户ID
+          example: "1001"
+        username:
+          type: string
+          description: 用户名
+          example: admin
+        email:
+          type: string
+          format: email
+          description: 邮箱
+          example: admin@example.com
+        avatar:
+          type: string
+          format: uri
+          description: 头像URL
+          example: https://example.com/avatar/admin.jpg
+        roles:
+          type: array
+          items:
+            type: string
+          description: 用户角色列表
+          example: ["admin", "user"]
+        permissions:
+          type: array
+          items:
+            type: string
+          description: 用户权限列表
+          example: ["user:read", "user:write", "system:config"]
+
+  # 安全方案定义
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT认证，请在请求头中添加 Authorization: Bearer {token}
