@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.mapper.Oauth2UserMapper">
+
+    <resultMap id="Oauth2UserResult" type="com.admin.entity.Oauth2User">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="provider" column="provider"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="providerUsername" column="provider_username"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="email" column="email"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectByProviderAndProviderId" resultMap="Oauth2UserResult">
+        SELECT * FROM sys_oauth2_user WHERE provider = #{provider} AND provider_id = #{providerId}
+    </select>
+
+    <select id="selectByUserIdAndProvider" resultMap="Oauth2UserResult">
+        SELECT * FROM sys_oauth2_user WHERE user_id = #{userId} AND provider = #{provider}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_oauth2_user (user_id, provider, provider_id, provider_username, avatar_url, email)
+        VALUES (#{userId}, #{provider}, #{providerId}, #{providerUsername}, #{avatarUrl}, #{email})
+    </insert>
+</mapper>

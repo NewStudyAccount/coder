@@ -116,4 +116,41 @@ INSERT INTO sys_role_menu (role_id, menu_id) VALUES
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18),
 (2, 1);
 
+CREATE TABLE IF NOT EXISTS sys_oss_file (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '文件ID',
+    original_name VARCHAR(200) NOT NULL COMMENT '原始文件名',
+    file_name VARCHAR(200) NOT NULL COMMENT '存储文件名',
+    file_path VARCHAR(500) NOT NULL COMMENT '文件路径',
+    file_size BIGINT NOT NULL COMMENT '文件大小(字节)',
+    file_type VARCHAR(50) COMMENT '文件MIME类型',
+    url VARCHAR(500) COMMENT '访问URL',
+    upload_user_id BIGINT COMMENT '上传用户ID',
+    upload_user_name VARCHAR(50) COMMENT '上传用户名',
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    INDEX idx_upload_user (upload_user_id),
+    INDEX idx_create_time (create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='OSS文件记录表';
+
+CREATE TABLE IF NOT EXISTS sys_oauth2_user (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+    user_id BIGINT NOT NULL COMMENT '本地用户ID',
+    provider VARCHAR(20) NOT NULL COMMENT '提供方(github/google)',
+    provider_id VARCHAR(100) NOT NULL COMMENT '第三方用户ID',
+    provider_username VARCHAR(100) COMMENT '第三方用户名',
+    avatar_url VARCHAR(500) COMMENT '头像URL',
+    email VARCHAR(100) COMMENT '邮箱',
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uk_provider_id (provider, provider_id),
+    INDEX idx_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='OAuth2用户绑定表';
+
+INSERT INTO sys_menu (id, menu_name, parent_id, path, component, icon, sort, menu_type, perms, status) VALUES
+(19, '文件管理', 2, '/system/oss', 'views/system/oss/OssList.vue', 'Folder', 5, 2, 'system:oss:list', 1),
+(20, '文件上传', 19, '', '', '', 1, 3, 'system:oss:upload', 1),
+(21, '文件删除', 19, '', '', '', 2, 3, 'system:oss:remove', 1);
+
+INSERT INTO sys_role_menu (role_id, menu_id) VALUES
+(1, 19), (1, 20), (1, 21);
+
 COMMIT;

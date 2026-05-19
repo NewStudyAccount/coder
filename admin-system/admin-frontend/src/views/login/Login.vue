@@ -34,18 +34,35 @@
           </el-button>
         </el-form-item>
       </el-form>
+
+      <el-divider v-if="oauth2Providers.length > 0">第三方登录</el-divider>
+
+      <div class="oauth2-buttons" v-if="oauth2Providers.length > 0">
+        <el-button
+          v-for="provider in oauth2Providers"
+          :key="provider.name"
+          class="oauth2-btn"
+          :class="getProviderBtnClass(provider.name)"
+          @click="handleOauth2Login(provider.name)"
+        >
+          <component :is="getProviderIcon(provider.name)" v-if="getProviderIcon(provider.name) !== 'span'" style="margin-right: 6px" />
+          {{ provider.displayName }} 登录
+        </el-button>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { login } from '@/api/auth'
+import { getOauth2AuthorizeUrl, getAvailableProviders } from '@/api/oauth2'
 import { useUserStore } from '@/stores/user'
 import { usePermissionStore } from '@/stores/permission'
+import type { Oauth2ProviderInfo } from '@/types/user'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -53,6 +70,7 @@ const permissionStore = usePermissionStore()
 
 const loginFormRef = ref<FormInstance>()
 const loading = ref(false)
+const oauth2Providers = ref<Oauth2ProviderInfo[]>([])
 
 const loginForm = reactive({
   username: '',
@@ -90,6 +108,46 @@ const handleLogin = async () => {
     }
   })
 }
+
+const handleOauth2Login = async (provider: string) => {
+  try {
+    const res = await getOauth2AuthorizeUrl(provider)
+    window.location.href = res.data.authorizeUrl
+  } catch (error) {
+    ElMessage.error('获取授权地址失败')
+    console.error(error)
+  }
+}
+
+const getProviderBtnClass = (name: string): string => {
+  const classMap: Record<string, string> = {
+    github: 'btn-github',
+    google: 'btn-google',
+    wechat: 'btn-wechat',
+    dingtalk: 'btn-dingtalk',
+    feishu: 'btn-feishu',
+    gitee: 'btn-gitee',
+    microsoft: 'btn-microsoft'
+  }
+  return classMap[name] || 'btn-default'
+}
+
+const getProviderIcon = (name: string) => {
+  return 'span'
+}
+
+const loadProviders = async () => {
+  try {
+    const res = await getAvailableProviders()
+    oauth2Providers.value = res.data || []
+  } catch {
+    oauth2Providers.value = []
+  }
+}
+
+onMounted(() => {
+  loadProviders()
+})
 </script>
 
 <style scoped>
@@ -103,7 +161,7 @@ const handleLogin = async () => {
 }
 
 .login-card {
-  width: 400px;
+  width: 420px;
   padding: 20px;
 }
 
@@ -120,5 +178,99 @@ const handleLogin = async () => {
 
 .login-btn {
   width: 100%;
+}
+
+.oauth2-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.oauth2-btn {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-github {
+  background-color: #24292e;
+  border-color: #24292e;
+  color: #fff;
+}
+.btn-github:hover {
+  background-color: #2f363d;
+  border-color: #2f363d;
+}
+
+.btn-google {
+  background-color: #fff;
+  border-color: #dadce0;
+  color: #3c4043;
+}
+.btn-google:hover {
+  background-color: #f8f9fa;
+  border-color: #dadce0;
+}
+
+.btn-wechat {
+  background-color: #07c160;
+  border-color: #07c160;
+  color: #fff;
+}
+.btn-wechat:hover {
+  background-color: #06ad56;
+  border-color: #06ad56;
+}
+
+.btn-dingtalk {
+  background-color: #0089ff;
+  border-color: #0089ff;
+  color: #fff;
+}
+.btn-dingtalk:hover {
+  background-color: #007ae6;
+  border-color: #007ae6;
+}
+
+.btn-feishu {
+  background-color: #3370ff;
+  border-color: #3370ff;
+  color: #fff;
+}
+.btn-feishu:hover {
+  background-color: #2a5fe6;
+  border-color: #2a5fe6;
+}
+
+.btn-gitee {
+  background-color: #c71d23;
+  border-color: #c71d23;
+  color: #fff;
+}
+.btn-gitee:hover {
+  background-color: #b01a1f;
+  border-color: #b01a1f;
+}
+
+.btn-microsoft {
+  background-color: #00a4ef;
+  border-color: #00a4ef;
+  color: #fff;
+}
+.btn-microsoft:hover {
+  background-color: #0093d6;
+  border-color: #0093d6;
+}
+
+.btn-default {
+  background-color: #409EFF;
+  border-color: #409EFF;
+  color: #fff;
+}
+.btn-default:hover {
+  background-color: #337ecc;
+  border-color: #337ecc;
 }
 </style>

@@ -19,6 +19,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/auth/login",
                         "/auth/register",
+                        "/oss/download/**",
+                        "/oauth2/callback/**",
+                        "/oauth2/authorize/**",
                         "/error"
                 );
     }

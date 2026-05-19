@@ -11,6 +11,12 @@ const router = createRouter({
       meta: { requiresAuth: false }
     },
     {
+      path: '/oauth2/callback',
+      name: 'Oauth2Callback',
+      component: () => import('@/views/login/Oauth2Callback.vue'),
+      meta: { requiresAuth: false }
+    },
+    {
       path: '/',
       component: () => import('@/layout/MainLayout.vue'),
       redirect: '/dashboard',
@@ -45,6 +51,12 @@ const router = createRouter({
           name: 'DeptList',
           component: () => import('@/views/system/dept/DeptList.vue'),
           meta: { title: '部门管理' }
+        },
+        {
+          path: 'system/oss',
+          name: 'OssList',
+          component: () => import('@/views/system/oss/OssList.vue'),
+          meta: { title: '文件管理' }
         },
         {
           path: 'profile',

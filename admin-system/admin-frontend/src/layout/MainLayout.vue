@@ -38,6 +38,10 @@
             <el-icon><OfficeBuilding /></el-icon>
             <template #title>部门管理</template>
           </el-menu-item>
+          <el-menu-item index="/system/oss">
+            <el-icon><Folder /></el-icon>
+            <template #title>文件管理</template>
+          </el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-aside>

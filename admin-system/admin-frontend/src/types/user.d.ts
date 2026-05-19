@@ -39,3 +39,8 @@ export interface LoginResult {
   token: string
   userInfo: UserInfo
 }
+
+export interface Oauth2ProviderInfo {
+  name: string
+  displayName: string
+}
