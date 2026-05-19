@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.mapper.RoleMapper">
+
+    <resultMap id="RoleResult" type="com.admin.entity.Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="RoleResult">
+        SELECT * FROM sys_role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE CONCAT('%', #{roleName}, '%')
+            </if>
+            <if test="roleKey != null and roleKey != ''">
+                AND role_key LIKE CONCAT('%', #{roleKey}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectById" resultMap="RoleResult">
+        SELECT * FROM sys_role WHERE id = #{id}
+    </select>
+
+    <select id="selectByRoleKey" resultMap="RoleResult">
+        SELECT * FROM sys_role WHERE role_key = #{roleKey}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_role (role_name, role_key, sort, status, remark)
+        VALUES (#{roleName}, #{roleKey}, #{sort}, #{status}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE sys_role
+        <set>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="roleKey != null">role_key = #{roleKey},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM sys_role WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        DELETE FROM sys_role WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectMenuIdsByRoleId" resultType="java.lang.Long">
+        SELECT menu_id FROM sys_role_menu WHERE role_id = #{roleId}
+    </select>
+
+    <insert id="insertRoleMenu">
+        INSERT INTO sys_role_menu (role_id, menu_id) VALUES (#{roleId}, #{menuId})
+    </insert>
+
+    <delete id="deleteRoleMenusByRoleId">
+        DELETE FROM sys_role_menu WHERE role_id = #{roleId}
+    </delete>
+</mapper>

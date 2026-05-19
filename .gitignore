@@ -6,4 +6,8 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-/node_modules
+/node_modules/
+/admin-system/admin-frontend/node_modules/
+/admin-system/admin-frontend/dist/
+/admin-system/admin-backend/target/
+/.idea/
