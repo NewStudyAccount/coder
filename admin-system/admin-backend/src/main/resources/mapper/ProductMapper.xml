@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admin.mapper.ProductMapper">
+
+    <resultMap id="ProductResult" type="com.admin.entity.Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="mainImage" column="main_image"/>
+        <result property="images" column="images"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="stock" column="stock"/>
+        <result property="sales" column="sales"/>
+        <result property="status" column="status"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="categoryName" column="category_name"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="ProductResult">
+        SELECT p.*, c.name AS category_name
+        FROM mall_product p
+        LEFT JOIN mall_category c ON p.category_id = c.id
+        <where>
+            <if test="name != null and name != ''">
+                AND p.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND p.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                AND p.status = #{status}
+            </if>
+        </where>
+        ORDER BY p.sort ASC, p.create_time DESC
+    </select>
+
+    <select id="selectById" resultMap="ProductResult">
+        SELECT p.*, c.name AS category_name
+        FROM mall_product p
+        LEFT JOIN mall_category c ON p.category_id = c.id
+        WHERE p.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mall_product (name, category_id, main_image, images, description, price, original_price, stock, sales, status, sort)
+        VALUES (#{name}, #{categoryId}, #{mainImage}, #{images}, #{description}, #{price}, #{originalPrice}, #{stock}, #{sales}, #{status}, #{sort})
+    </insert>
+
+    <update id="update">
+        UPDATE mall_product
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="mainImage != null">main_image = #{mainImage},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="originalPrice != null">original_price = #{originalPrice},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="sales != null">sales = #{sales},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM mall_product WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        DELETE FROM mall_product WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE mall_product SET status = #{status} WHERE id = #{id}
+    </update>
+</mapper>
