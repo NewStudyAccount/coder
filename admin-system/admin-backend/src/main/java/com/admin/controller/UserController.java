@@ -1,82 +1,83 @@
 package com.admin.controller;
 
-import com.admin.common.Result;
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+import com.admin.common.result.Result;
+import com.admin.dto.UserCreateRequest;
+import com.admin.dto.UserUpdateRequest;
 import com.admin.entity.User;
 import com.admin.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/system/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/list")
-    public Result<List<User>> list(@RequestParam(required = false) String username,
-                                   @RequestParam(required = false) Integer status,
-                                   @RequestParam(required = false) Long deptId) {
-        List<User> list = userService.getList(username, status, deptId);
-        return Result.success(list);
+    @PreAuthorize("hasAuthority('system:user:list')")
+    public Result<PageResult<User>> list(PageParam pageParam,
+                                          @RequestParam(required = false) String username,
+                                          @RequestParam(required = false) Integer status,
+                                          @RequestParam(required = false) Long deptId) {
+        return Result.success(userService.selectUserList(pageParam, username, status, deptId));
     }
 
     @GetMapping("/{id}")
-    public Result<User> getById(@PathVariable Long id) {
-        User user = userService.getById(id);
-        return Result.success(user);
+    @PreAuthorize("hasAuthority('system:user:query')")
+    public Result<User> getInfo(@PathVariable Long id) {
+        return Result.success(userService.selectUserById(id));
     }
 
     @PostMapping
-    public Result<Void> add(@RequestBody User user) {
-        try {
-            userService.add(user);
-            return Result.success();
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+    @PreAuthorize("hasAuthority('system:user:add')")
+    public Result<Void> add(@Valid @RequestBody UserCreateRequest request) {
+        userService.createUser(request);
+        return Result.success();
     }
 
     @PutMapping
-    public Result<Void> update(@RequestBody User user) {
-        userService.update(user);
+    @PreAuthorize("hasAuthority('system:user:edit')")
+    public Result<Void> edit(@Valid @RequestBody UserUpdateRequest request) {
+        userService.updateUser(request);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
-    public Result<Void> deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
+    @PreAuthorize("hasAuthority('system:user:remove')")
+    public Result<Void> remove(@PathVariable Long id) {
+        userService.deleteUser(id);
         return Result.success();
     }
 
-    @DeleteMapping("/batch")
-    public Result<Void> deleteBatch(@RequestBody List<Long> ids) {
-        userService.deleteBatch(ids);
+    @PutMapping("/resetPassword")
+    @PreAuthorize("hasAuthority('system:user:resetPwd')")
+    public Result<Void> resetPassword(@RequestBody Map<String, String> body) {
+        Long userId = Long.valueOf(body.get("userId"));
+        String newPassword = body.getOrDefault("newPassword", "123456");
+        userService.resetPassword(userId, newPassword);
         return Result.success();
     }
 
-    @GetMapping("/{userId}/roles")
-    public Result<List<Long>> getRoleIds(@PathVariable Long userId) {
-        List<Long> roleIds = userService.getRoleIds(userId);
-        return Result.success(roleIds);
-    }
-
-    @PutMapping("/{userId}/roles")
-    public Result<Void> assignRoles(@PathVariable Long userId, @RequestBody List<Long> roleIds) {
-        userService.assignRoles(userId, roleIds);
+    @PutMapping("/profile")
+    public Result<Void> updateProfile(@RequestBody User user) {
+        userService.updateProfile(user);
         return Result.success();
     }
 
-    @PutMapping("/{id}/reset-password")
-    public Result<Void> resetPassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
+    @PutMapping("/profile/password")
+    public Result<Void> updatePassword(@RequestBody Map<String, String> body) {
+        Long userId = Long.valueOf(body.get("userId"));
+        String oldPassword = body.get("oldPassword");
         String newPassword = body.get("newPassword");
-        if (newPassword == null || newPassword.isEmpty()) {
-            return Result.error("新密码不能为空");
-        }
-        userService.resetPassword(id, newPassword);
+        userService.updatePassword(userId, oldPassword, newPassword);
         return Result.success();
     }
 }

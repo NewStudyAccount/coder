@@ -1,32 +1,14 @@
 package com.admin.mapper;
 
 import com.admin.entity.Role;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
-public interface RoleMapper {
+public interface RoleMapper extends BaseMapper<Role> {
 
-    List<Role> selectList(@Param("roleName") String roleName, @Param("roleKey") String roleKey,
-                          @Param("status") Integer status);
-
-    Role selectById(Long id);
-
-    Role selectByRoleKey(String roleKey);
-
-    int insert(Role role);
-
-    int update(Role role);
-
-    int deleteById(Long id);
-
-    int deleteBatch(List<Long> ids);
-
-    List<Long> selectMenuIdsByRoleId(Long roleId);
-
-    int insertRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
-
-    int deleteRoleMenusByRoleId(Long roleId);
+    List<Long> selectRoleIdsByUserId(@Param("userId") Long userId);
 }

@@ -1,75 +1,79 @@
 package com.admin.controller;
 
-import com.admin.common.Result;
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+import com.admin.common.result.Result;
+import com.admin.dto.RoleCreateRequest;
 import com.admin.entity.Role;
 import com.admin.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/system/role")
+@RequiredArgsConstructor
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @GetMapping("/list")
-    public Result<List<Role>> list(@RequestParam(required = false) String roleName,
-                                   @RequestParam(required = false) String roleKey,
-                                   @RequestParam(required = false) Integer status) {
-        List<Role> list = roleService.getList(roleName, roleKey, status);
-        return Result.success(list);
+    @PreAuthorize("hasAuthority('system:role:list')")
+    public Result<PageResult<Role>> list(PageParam pageParam,
+                                          @RequestParam(required = false) String roleName,
+                                          @RequestParam(required = false) String roleKey,
+                                          @RequestParam(required = false) Integer status) {
+        return Result.success(roleService.selectRoleList(pageParam, roleName, roleKey, status));
+    }
+
+    @GetMapping("/all")
+    public Result<List<Role>> all() {
+        return Result.success(roleService.selectRoleAll());
     }
 
     @GetMapping("/{id}")
-    public Result<Role> getById(@PathVariable Long id) {
-        Role role = roleService.getById(id);
-        return Result.success(role);
+    @PreAuthorize("hasAuthority('system:role:query')")
+    public Result<Role> getInfo(@PathVariable Long id) {
+        return Result.success(roleService.selectRoleById(id));
     }
 
     @PostMapping
-    public Result<Void> add(@RequestBody Role role) {
-        try {
-            roleService.add(role);
-            return Result.success();
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+    @PreAuthorize("hasAuthority('system:role:add')")
+    public Result<Void> add(@Valid @RequestBody RoleCreateRequest request) {
+        roleService.createRole(request);
+        return Result.success();
     }
 
-    @PutMapping
-    public Result<Void> update(@RequestBody Role role) {
-        try {
-            roleService.update(role);
-            return Result.success();
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('system:role:edit')")
+    public Result<Void> edit(@PathVariable Long id, @Valid @RequestBody RoleCreateRequest request) {
+        roleService.updateRole(id, request);
+        return Result.success();
     }
 
     @DeleteMapping("/{id}")
-    public Result<Void> deleteById(@PathVariable Long id) {
-        roleService.deleteById(id);
+    @PreAuthorize("hasAuthority('system:role:remove')")
+    public Result<Void> remove(@PathVariable Long id) {
+        roleService.deleteRole(id);
         return Result.success();
     }
 
-    @DeleteMapping("/batch")
-    public Result<Void> deleteBatch(@RequestBody List<Long> ids) {
-        roleService.deleteBatch(ids);
-        return Result.success();
-    }
-
-    @GetMapping("/{roleId}/menus")
+    @GetMapping("/menuIds/{roleId}")
     public Result<List<Long>> getMenuIds(@PathVariable Long roleId) {
-        List<Long> menuIds = roleService.getMenuIds(roleId);
-        return Result.success(menuIds);
+        return Result.success(roleService.selectMenuIdsByRoleId(roleId));
     }
 
-    @PutMapping("/{roleId}/menus")
-    public Result<Void> assignMenus(@PathVariable Long roleId, @RequestBody List<Long> menuIds) {
-        roleService.assignMenus(roleId, menuIds);
+    @PutMapping("/assignMenu")
+    @PreAuthorize("hasAuthority('system:role:edit')")
+    public Result<Void> assignMenu(@RequestBody Map<String, Object> body) {
+        Long roleId = Long.valueOf(body.get("roleId").toString());
+        @SuppressWarnings("unchecked")
+        List<Long> menuIds = (List<Long>) body.get("menuIds");
+        roleService.assignMenu(roleId, menuIds);
         return Result.success();
     }
 }

@@ -1,80 +1,27 @@
 package com.admin.service;
 
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+import com.admin.dto.RoleCreateRequest;
 import com.admin.entity.Role;
-import com.admin.mapper.RoleMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-public class RoleService {
+public interface RoleService {
 
-    @Autowired
-    private RoleMapper roleMapper;
+    PageResult<Role> selectRoleList(PageParam pageParam, String roleName, String roleKey, Integer status);
 
-    public List<Role> getList(String roleName, String roleKey, Integer status) {
-        return roleMapper.selectList(roleName, roleKey, status);
-    }
+    List<Role> selectRoleAll();
 
-    public Role getById(Long id) {
-        return roleMapper.selectById(id);
-    }
+    Role selectRoleById(Long id);
 
-    @Transactional
-    public void add(Role role) {
-        Role existRole = roleMapper.selectByRoleKey(role.getRoleKey());
-        if (existRole != null) {
-            throw new RuntimeException("角色标识已存在");
-        }
-        role.setStatus(role.getStatus() != null ? role.getStatus() : 1);
-        roleMapper.insert(role);
+    void createRole(RoleCreateRequest request);
 
-        if (role.getMenuIds() != null && !role.getMenuIds().isEmpty()) {
-            for (Long menuId : role.getMenuIds()) {
-                roleMapper.insertRoleMenu(role.getId(), menuId);
-            }
-        }
-    }
+    void updateRole(Long id, RoleCreateRequest request);
 
-    @Transactional
-    public void update(Role role) {
-        roleMapper.update(role);
+    void deleteRole(Long id);
 
-        if (role.getMenuIds() != null) {
-            roleMapper.deleteRoleMenusByRoleId(role.getId());
-            for (Long menuId : role.getMenuIds()) {
-                roleMapper.insertRoleMenu(role.getId(), menuId);
-            }
-        }
-    }
+    List<Long> selectMenuIdsByRoleId(Long roleId);
 
-    @Transactional
-    public void deleteById(Long id) {
-        roleMapper.deleteRoleMenusByRoleId(id);
-        roleMapper.deleteById(id);
-    }
-
-    @Transactional
-    public void deleteBatch(List<Long> ids) {
-        for (Long id : ids) {
-            roleMapper.deleteRoleMenusByRoleId(id);
-        }
-        roleMapper.deleteBatch(ids);
-    }
-
-    public List<Long> getMenuIds(Long roleId) {
-        return roleMapper.selectMenuIdsByRoleId(roleId);
-    }
-
-    @Transactional
-    public void assignMenus(Long roleId, List<Long> menuIds) {
-        roleMapper.deleteRoleMenusByRoleId(roleId);
-        if (menuIds != null && !menuIds.isEmpty()) {
-            for (Long menuId : menuIds) {
-                roleMapper.insertRoleMenu(roleId, menuId);
-            }
-        }
-    }
+    void assignMenu(Long roleId, List<Long> menuIds);
 }

@@ -1,25 +1,19 @@
 package com.admin.mapper;
 
 import com.admin.entity.Menu;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
-public interface MenuMapper {
+public interface MenuMapper extends BaseMapper<Menu> {
 
-    List<Menu> selectList(@Param("menuName") String menuName, @Param("status") Integer status);
+    List<String> selectPermsByUserId(@Param("userId") Long userId);
 
-    Menu selectById(Long id);
+    List<Menu> selectMenuTreeByUserId(@Param("userId") Long userId);
 
-    int insert(Menu menu);
-
-    int update(Menu menu);
-
-    int deleteById(Long id);
-
-    List<Menu> selectByParentId(Long parentId);
-
-    List<Menu> selectByRoleIds(@Param("roleIds") List<Long> roleIds);
+    List<Menu> selectMenuTreeAll();
 }

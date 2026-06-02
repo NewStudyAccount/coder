@@ -4,131 +4,38 @@ server:
     context-path: /api
 
 spring:
-  application:
-    name: admin-system
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/admin_system?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+  profiles:
+    active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+    default-property-inclusion: non_null
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.admin.entity
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
 jwt:
-  secret: admin-system-secret-key-2024-very-long-secret-key
-  expiration: 86400000
-  header: Authorization
-  prefix: "Bearer "
+  secret: admin-system-jwt-secret-key-must-be-at-least-256-bits-long-for-hs256
+  access-token-expiration: 7200000
+  refresh-token-expiration: 604800000
+  token-prefix: Bearer
+  header-string: Authorization
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
 
 logging:
   level:
     com.admin: debug
-    org.springframework.web: info
-  pattern:
-    console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
-
-oss:
-  storage-path: ./storage
-
-oauth2:
-  frontend-redirect-url: http://localhost:5173/oauth2/callback
-  providers:
-    github:
-      client-id: your-github-client-id
-      client-secret: your-github-client-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/github
-      authorize-url: https://github.com/login/oauth/authorize
-      token-url: https://github.com/login/oauth/access_token
-      user-info-url: https://api.github.com/user
-      scope: user:email
-      user-info-mapping:
-        id-field: id
-        username-field: login
-        avatar-field: avatar_url
-        email-field: email
-    google:
-      client-id: your-google-client-id
-      client-secret: your-google-client-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/google
-      authorize-url: https://accounts.google.com/o/oauth2/v2/auth
-      token-url: https://oauth2.googleapis.com/token
-      user-info-url: https://www.googleapis.com/oauth2/v2/userinfo
-      scope: openid email profile
-      user-info-mapping:
-        id-field: id
-        username-field: name
-        avatar-field: picture
-        email-field: email
-    wechat:
-      client-id: your-wechat-app-id
-      client-secret: your-wechat-app-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/wechat
-      authorize-url: https://open.weixin.qq.com/connect/qrconnect
-      token-url: https://api.weixin.qq.com/sns/oauth2/access_token
-      user-info-url: https://api.weixin.qq.com/sns/userinfo
-      scope: snsapi_login
-      user-info-mapping:
-        id-field: openid
-        username-field: nickname
-        avatar-field: headimgurl
-        email-field: email
-    dingtalk:
-      client-id: your-dingtalk-app-id
-      client-secret: your-dingtalk-app-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/dingtalk
-      authorize-url: https://login.dingtalk.com/login/qrcode.htm
-      token-url: https://oapi.dingtalk.com/sns/gettoken
-      user-info-url: https://oapi.dingtalk.com/sns/getuserinfo
-      scope: snsapi_login
-      user-info-mapping:
-        id-field: openid
-        username-field: nick
-        avatar-field: avatar_url
-        email-field: email
-    feishu:
-      client-id: your-feishu-app-id
-      client-secret: your-feishu-app-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/feishu
-      authorize-url: https://open.feishu.cn/open-apis/authen/v1/authorize
-      token-url: https://open.feishu.cn/open-apis/authen/v1/oidc/access_token
-      user-info-url: https://open.feishu.cn/open-apis/authen/v1/user_info
-      scope: contact:user.base:readonly
-      user-info-mapping:
-        id-field: open_id
-        username-field: name
-        avatar-field: avatar_url
-        email-field: email
-    gitee:
-      client-id: your-gitee-client-id
-      client-secret: your-gitee-client-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/gitee
-      authorize-url: https://gitee.com/oauth/authorize
-      token-url: https://gitee.com/oauth/token
-      user-info-url: https://gitee.com/api/v5/user
-      scope: user_info
-      user-info-mapping:
-        id-field: id
-        username-field: login
-        avatar-field: avatar_url
-        email-field: email
-    microsoft:
-      client-id: your-microsoft-client-id
-      client-secret: your-microsoft-client-secret
-      redirect-uri: http://localhost:8080/api/oauth2/callback/microsoft
-      authorize-url: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
-      token-url: https://login.microsoftonline.com/common/oauth2/v2.0/token
-      user-info-url: https://graph.microsoft.com/v1.0/me
-      scope: User.Read
-      user-info-mapping:
-        id-field: id
-        username-field: displayName
-        avatar-field: ""
-        email-field: mail
