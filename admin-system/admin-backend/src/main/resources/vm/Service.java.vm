@@ -1,0 +1,18 @@
+package ${packageName}.service;
+
+import ${packageName}.entity.${className};
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+
+public interface ${className}Service {
+
+    PageResult<${className}> select${className}List(PageParam pageParam);
+
+    ${className} select${className}ById(Long id);
+
+    void create${className}(${className} ${classname});
+
+    void update${className}(${className} ${classname});
+
+    void delete${className}(Long id);
+}

@@ -1,0 +1,46 @@
+package ${packageName}.service.impl;
+
+import ${packageName}.entity.${className};
+import ${packageName}.mapper.${className}Mapper;
+import ${packageName}.service.${className}Service;
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class ${className}ServiceImpl implements ${className}Service {
+
+    private final ${className}Mapper ${classname}Mapper;
+
+    @Override
+    public PageResult<${className}> select${className}List(PageParam pageParam) {
+        Page<${className}> page = ${classname}Mapper.selectPage(
+                new Page<>(pageParam.getPageNum(), pageParam.getPageSize()),
+                new LambdaQueryWrapper<${className}>().orderByDesc(${className}::getCreateTime));
+        return new PageResult<>(page.getRecords(), page.getTotal());
+    }
+
+    @Override
+    public ${className} select${className}ById(Long id) {
+        return ${classname}Mapper.selectById(id);
+    }
+
+    @Override
+    public void create${className}(${className} ${classname}) {
+        ${classname}Mapper.insert(${classname});
+    }
+
+    @Override
+    public void update${className}(${className} ${classname}) {
+        ${classname}Mapper.updateById(${classname});
+    }
+
+    @Override
+    public void delete${className}(Long id) {
+        ${classname}Mapper.deleteById(id);
+    }
+}

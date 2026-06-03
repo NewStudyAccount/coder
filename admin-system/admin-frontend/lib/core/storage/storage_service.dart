@@ -36,6 +36,18 @@ class StorageService {
 
   bool get isLoggedIn => getString(StorageKeys.accessToken) != null;
 
+  String? get refreshToken => getString(StorageKeys.refreshToken);
+
+  String? get accessToken => getString(StorageKeys.accessToken);
+
+  Future<void> saveToken(String token) async {
+    await setString(StorageKeys.accessToken, token);
+  }
+
+  Future<void> saveRefreshToken(String token) async {
+    await setString(StorageKeys.refreshToken, token);
+  }
+
   Future<void> saveTokens(String accessToken, String refreshToken) async {
     await setString(StorageKeys.accessToken, accessToken);
     await setString(StorageKeys.refreshToken, refreshToken);
@@ -46,5 +58,9 @@ class StorageService {
     await remove(StorageKeys.refreshToken);
     await remove(StorageKeys.userInfo);
     await remove(StorageKeys.menuData);
+  }
+
+  Future<void> clearAll() async {
+    await clear();
   }
 }

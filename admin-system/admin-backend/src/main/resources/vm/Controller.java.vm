@@ -1,0 +1,51 @@
+package ${packageName}.controller;
+
+import ${packageName}.entity.${className};
+import ${packageName}.service.${className}Service;
+import com.admin.common.result.PageParam;
+import com.admin.common.result.PageResult;
+import com.admin.common.result.Result;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/${moduleName}/${businessName}")
+@RequiredArgsConstructor
+public class ${className}Controller {
+
+    private final ${className}Service ${classname}Service;
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('${moduleName}:${businessName}:list')")
+    public Result<PageResult<${className}>> list(PageParam pageParam) {
+        return Result.success(${classname}Service.select${className}List(pageParam));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('${moduleName}:${businessName}:query')")
+    public Result<${className}> getInfo(@PathVariable Long id) {
+        return Result.success(${classname}Service.select${className}ById(id));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('${moduleName}:${businessName}:add')")
+    public Result<Void> add(@RequestBody ${className} ${classname}) {
+        ${classname}Service.create${className}(${classname});
+        return Result.success();
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAuthority('${moduleName}:${businessName}:edit')")
+    public Result<Void> edit(@RequestBody ${className} ${classname}) {
+        ${classname}Service.update${className}(${classname});
+        return Result.success();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('${moduleName}:${businessName}:remove')")
+    public Result<Void> remove(@PathVariable Long id) {
+        ${classname}Service.delete${className}(id);
+        return Result.success();
+    }
+}

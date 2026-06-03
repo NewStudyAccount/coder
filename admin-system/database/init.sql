@@ -556,4 +556,57 @@ INSERT INTO sys_job (id, job_name, job_group, invoke_target, cron_expression, mi
 (1, '系统任务(无参)', 'DEFAULT', 'ryTask.noParams',  '0/10 * * * * ?', 1, 1, 0, 'admin', ''),
 (2, '系统任务(有参)', 'DEFAULT', 'ryTask.params(\'ry\')', '0/15 * * * * ?', 1, 1, 0, 'admin', '');
 
+-- 代码生成业务表
+CREATE TABLE IF NOT EXISTS gen_table (
+    id          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '编号',
+    table_name  VARCHAR(200) DEFAULT ''  COMMENT '表名称',
+    table_comment VARCHAR(500) DEFAULT '' COMMENT '表描述',
+    class_name  VARCHAR(100) DEFAULT ''  COMMENT '实体类名称',
+    package_name VARCHAR(100) DEFAULT '' COMMENT '包路径',
+    module_name VARCHAR(30)  DEFAULT ''  COMMENT '模块名',
+    business_name VARCHAR(30) DEFAULT '' COMMENT '业务名',
+    function_name VARCHAR(50) DEFAULT '' COMMENT '功能名',
+    function_name_query VARCHAR(50) DEFAULT '' COMMENT '功能名(查询)',
+    gen_type    CHAR(1)      DEFAULT '0' COMMENT '生成代码方式（0zip压缩包 1自定义路径）',
+    gen_path    VARCHAR(200) DEFAULT '/' COMMENT '生成路径',
+    tpl_category VARCHAR(30) DEFAULT 'crud' COMMENT '使用的模板',
+    tpl_web_type VARCHAR(30) DEFAULT '' COMMENT '前端类型',
+    parent_menu_id VARCHAR(50) DEFAULT '' COMMENT '上级菜单ID',
+    parent_menu_name VARCHAR(50) DEFAULT '' COMMENT '上级菜单名称',
+    menu_id     BIGINT       DEFAULT NULL COMMENT '菜单ID',
+    create_by   VARCHAR(64)  DEFAULT ''  COMMENT '创建者',
+    create_time DATETIME     DEFAULT NULL COMMENT '创建时间',
+    update_by   VARCHAR(64)  DEFAULT ''  COMMENT '更新者',
+    update_time DATETIME     DEFAULT NULL COMMENT '更新时间',
+    remark      VARCHAR(500) DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (id)
+) ENGINE=InnoDB COMMENT='代码生成业务表';
+
+-- 代码生成字段表
+CREATE TABLE IF NOT EXISTS gen_table_column (
+    id          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '编号',
+    table_id    BIGINT       DEFAULT NULL COMMENT '归属表编号',
+    column_name VARCHAR(200) DEFAULT ''  COMMENT '列名称',
+    column_comment VARCHAR(500) DEFAULT '' COMMENT '列描述',
+    column_type VARCHAR(100) DEFAULT ''  COMMENT '列类型',
+    java_type   VARCHAR(500) DEFAULT ''  COMMENT 'JAVA类型',
+    java_field  VARCHAR(200) DEFAULT ''  COMMENT 'JAVA字段名',
+    is_pk       INT          DEFAULT 0   COMMENT '是否主键（1是）',
+    is_increment INT         DEFAULT 0   COMMENT '是否自增（1是）',
+    is_required INT          DEFAULT 0   COMMENT '是否必填（1是）',
+    is_insert   INT          DEFAULT 0   COMMENT '是否为插入字段（1是）',
+    is_edit     INT          DEFAULT 0   COMMENT '是否编辑字段（1是）',
+    is_list     INT          DEFAULT 0   COMMENT '是否列表字段（1是）',
+    is_query    INT          DEFAULT 0   COMMENT '是否查询字段（1是）',
+    query_type  VARCHAR(200) DEFAULT 'EQ' COMMENT '查询方式',
+    html_type   VARCHAR(200) DEFAULT ''  COMMENT '显示类型',
+    dict_type   VARCHAR(200) DEFAULT ''  COMMENT '字典类型',
+    sort        INT          DEFAULT 0   COMMENT '排序',
+    create_by   VARCHAR(64)  DEFAULT ''  COMMENT '创建者',
+    create_time DATETIME     DEFAULT NULL COMMENT '创建时间',
+    update_by   VARCHAR(64)  DEFAULT ''  COMMENT '更新者',
+    update_time DATETIME     DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (id)
+) ENGINE=InnoDB COMMENT='代码生成字段表';
+
 COMMIT;

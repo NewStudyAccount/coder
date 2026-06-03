@@ -1,9 +1,14 @@
 import 'package:dio/dio.dart';
 import '../api_exception.dart';
+import '../../storage/storage_service.dart';
 
 class ErrorInterceptor extends Interceptor {
+  final StorageService storageService;
+
+  ErrorInterceptor({required this.storageService});
+
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     switch (err.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -26,11 +31,40 @@ class ErrorInterceptor extends Interceptor {
         if (data is Map && data['message'] != null) {
           message = data['message'];
         }
+
+        if (statusCode == 401) {
+          final refreshToken = storageService.refreshToken;
+          if (refreshToken != null && refreshToken.isNotEmpty) {
+            try {
+              final dio = Dio(BaseOptions(
+                baseUrl: err.requestOptions.baseUrl,
+                headers: {'Authorization': 'Bearer $refreshToken'},
+              ));
+              final response = await dio.post('/auth/refresh');
+              if (response.statusCode == 200 && response.data['code'] == 200) {
+                final newAccessToken = response.data['data']['accessToken'] as String;
+                final newRefreshToken = response.data['data']['refreshToken'] as String? ?? refreshToken;
+                await storageService.saveToken(newAccessToken);
+                await storageService.saveRefreshToken(newRefreshToken);
+
+                err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+                final retryResponse = await dio.fetch(err.requestOptions);
+                handler.resolve(retryResponse);
+                return;
+              }
+            } catch (_) {
+              await storageService.clearAll();
+            }
+          }
+          handler.next(DioException(
+            requestOptions: err.requestOptions,
+            error: ApiException.unauthorized(),
+          ));
+          break;
+        }
+
         ApiException exception;
         switch (statusCode) {
-          case 401:
-            exception = ApiException.unauthorized();
-            break;
           case 403:
             exception = ApiException.forbidden();
             break;

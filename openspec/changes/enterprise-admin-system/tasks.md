@@ -56,9 +56,9 @@
 
 ## 7. 后端框架层 - AOP 与数据权限
 
-- [ ] 7.1 创建 `framework/datapermission/DataScope.java` 注解
-- [ ] 7.2 创建 `framework/datapermission/DataScopeAspect.java` 切面，解析数据权限并拼接到 SQL
-- [ ] 7.3 创建 `framework/datapermission/DataScopeInterceptor.java` MyBatis Plus 拦截器，拼接部门过滤条件
+- [x] 7.1 创建 `framework/datapermission/DataScope.java` 注解
+- [x] 7.2 创建 `framework/datapermission/DataScopeAspect.java` 切面，解析数据权限并拼接到 SQL
+- [x] 7.3 创建 `framework/datapermission/DataScopeInterceptor.java` MyBatis Plus 拦截器，拼接部门过滤条件
 - [x] 7.4 创建 `framework/operlog/OperLog.java` 注解（title, businessType）
 - [x] 7.5 创建 `framework/operlog/OperLogAspect.java` 切面，异步记录操作日志
 - [x] 7.6 创建 `framework/operlog/OperLogService.java`，异步保存操作日志到数据库
@@ -68,21 +68,21 @@
 - [x] 8.1 创建 OperLogController（操作日志分页查询、详情查询）
 - [x] 8.2 创建 LoginLogService/LoginLogServiceImpl（登录日志记录、查询）
 - [x] 8.3 创建 LoginLogController（登录日志分页查询）
-- [ ] 8.4 创建在线用户管理：SysUserOnlineService（从 Redis 获取在线用户、强制下线）
-- [ ] 8.5 创建 SysUserOnlineController（在线用户列表、强制下线）
-- [ ] 8.6 创建 ServerController（服务器监控信息：CPU、内存、JVM、磁盘）
+- [x] 8.4 创建在线用户管理：SysUserOnlineService（从 Redis 获取在线用户、强制下线）
+- [x] 8.5 创建 SysUserOnlineController（在线用户列表、强制下线）
+- [x] 8.6 创建 ServerController（服务器监控信息：CPU、内存、JVM、磁盘）
 
 ## 9. 后端开发工具模块
 
-- [ ] 9.1 创建代码生成：GenTableService/GenTableServiceImpl（表导入、配置编辑、代码预览、批量生成下载）
-- [ ] 9.2 创建 GenTableController（表导入、列表、编辑配置、预览、下载）
-- [ ] 9.3 创建 Velocity 模板文件（Entity.java.vm, Mapper.java.vm, Service.java.vm, ServiceImpl.java.vm, Controller.java.vm, Mapper.xml.vm）
+- [x] 9.1 创建代码生成：GenTableService/GenTableServiceImpl（表导入、配置编辑、代码预览、批量生成下载）
+- [x] 9.2 创建 GenTableController（表导入、列表、编辑配置、预览、下载）
+- [x] 9.3 创建 Velocity 模板文件（Entity.java.vm, Mapper.java.vm, Service.java.vm, ServiceImpl.java.vm, Controller.java.vm, Mapper.xml.vm）
 - [x] 9.4 创建 NoticeService/NoticeServiceImpl（通知 CRUD、已读状态）
 - [x] 9.5 创建 NoticeController（通知列表、新增、修改、删除、标记已读）
-- [ ] 9.6 创建 JobService/JobServiceImpl（任务 CRUD、启动/暂停/执行、Cron 校验）
-- [ ] 9.7 创建 JobController（任务列表、新增、修改、删除、启动、暂停、执行一次）
-- [ ] 9.8 创建 JobLogService/JobLogServiceImpl（执行日志记录和查询）
-- [ ] 9.9 创建 JobLogController（执行日志列表）
+- [x] 9.6 创建 JobService/JobServiceImpl（任务 CRUD、启动/暂停/执行、Cron 校验）
+- [x] 9.7 创建 JobController（任务列表、新增、修改、删除、启动、暂停、执行一次）
+- [x] 9.8 创建 JobLogService/JobLogServiceImpl（执行日志记录和查询）
+- [x] 9.9 创建 JobLogController（执行日志列表）
 
 ## 10. Flutter 前端项目初始化
 
@@ -110,24 +110,24 @@
 - [x] 12.1 创建 `shared/layouts/admin_layout.dart`，主布局组件（侧边菜单 + 顶部导航 + 内容区）
 - [x] 12.2 实现侧边菜单组件：根据菜单数据动态渲染树形菜单，支持折叠/展开
 - [x] 12.3 实现顶部导航栏：Logo、面包屑、消息通知图标、用户信息下拉菜单
-- [ ] 12.4 实现标签页导航：多页签切换、关闭当前/关闭其他/关闭全部
-- [ ] 12.5 实现面包屑导航：根据当前路由层级生成面包屑
-- [ ] 12.6 实现响应式布局：窗口宽度 < 768px 侧边栏折叠为图标模式
+- [x] 12.4 实现标签页导航：多页签切换、关闭当前/关闭其他/关闭全部
+- [x] 12.5 实现面包屑导航：根据当前路由层级生成面包屑
+- [x] 12.6 实现响应式布局：窗口宽度 < 768px 侧边栏折叠为图标模式
 
 ## 13. Flutter 权限与路由
 
 - [x] 13.1 创建 `core/router/app_router.dart`，GoRouter 基础配置（登录页、404 页、403 页）
 - [x] 13.2 实现动态路由生成：登录后获取菜单数据，动态注册 GoRouter 路由
 - [x] 13.3 实现路由守卫：未登录重定向登录页，无权限跳转 403 页
-- [ ] 13.4 创建 `shared/widgets/permission_widget.dart`，按钮级权限控制组件
-- [ ] 13.5 实现菜单权限过滤：侧边菜单仅显示当前用户有权限的菜单项
+- [x] 13.4 创建 `shared/widgets/permission_widget.dart`，按钮级权限控制组件
+- [x] 13.5 实现菜单权限过滤：侧边菜单仅显示当前用户有权限的菜单项
 
 ## 14. Flutter 通用组件
 
 - [x] 14.1 创建 `shared/widgets/admin_data_table.dart`，企业级数据表格组件（分页、排序、行选择、工具栏、加载/空/错误状态）
-- [ ] 14.2 创建 `shared/widgets/admin_tree.dart`，树形组件（展开/折叠、选择、搜索）
+- [x] 14.2 创建 `shared/widgets/admin_tree.dart`，树形组件（展开/折叠、选择、搜索）
 - [x] 14.3 创建 `shared/widgets/admin_dialog.dart`，通用弹窗组件（表单弹窗、确认弹窗）
-- [ ] 14.4 创建 `shared/widgets/admin_form.dart`，通用表单组件（文本、下拉、日期、数字等表单项）
+- [x] 14.4 创建 `shared/widgets/admin_form.dart`，通用表单组件（文本、下拉、日期、数字等表单项）
 - [x] 14.5 创建 `shared/widgets/loading_widget.dart`、`error_widget.dart`、`empty_widget.dart`
 
 ## 15. Flutter 认证模块
@@ -139,7 +139,7 @@
 - [x] 15.5 创建登录页面：用户名/密码输入、登录按钮、表单验证
 - [x] 15.6 对接登录逻辑：输入验证 → API 调用 → 保存 Token → 获取菜单 → 动态生成路由 → 跳转首页
 - [x] 15.7 实现登出逻辑：清除 Token → 跳转登录页
-- [ ] 15.8 实现 Token 自动刷新：401 时用 refreshToken 重试
+- [x] 15.8 实现 Token 自动刷新：401 时用 refreshToken 重试
 
 ## 16. Flutter 系统管理模块
 
@@ -155,14 +155,14 @@
 
 - [x] 17.1 创建 `features/monitor/operlog/` 模块：操作日志列表页（分页查询、详情弹窗）
 - [x] 17.2 创建 `features/monitor/loginlog/` 模块：登录日志列表页
-- [ ] 17.3 创建 `features/monitor/online/` 模块：在线用户列表页 + 强制下线
-- [ ] 17.4 创建 `features/monitor/server/` 模块：服务器监控页（CPU/内存/JVM/磁盘仪表盘）
+- [x] 17.3 创建 `features/monitor/online/` 模块：在线用户列表页 + 强制下线
+- [x] 17.4 创建 `features/monitor/server/` 模块：服务器监控页（CPU/内存/JVM/磁盘仪表盘）
 
 ## 18. Flutter 开发工具模块
 
-- [ ] 18.1 创建 `features/devtools/gen/` 模块：代码生成页（表导入、配置编辑、代码预览、批量下载）
-- [ ] 18.2 创建 `features/devtools/notice/` 模块：消息通知页（通知列表、新增/编辑、已读/未读）
-- [ ] 18.3 创建 `features/devtools/job/` 模块：定时任务页（任务列表、新增/编辑、启动/暂停/执行、执行日志）
+- [x] 18.1 创建 `features/devtools/gen/` 模块：代码生成页（表导入、配置编辑、代码预览、批量下载）
+- [x] 18.2 创建 `features/devtools/notice/` 模块：消息通知页（通知列表、新增/编辑、已读/未读）
+- [x] 18.3 创建 `features/devtools/job/` 模块：定时任务页（任务列表、新增/编辑、启动/暂停/执行、执行日志）
 
 ## 19. Flutter 应用入口与整合
 
@@ -173,7 +173,7 @@
 
 ## 20. 验证与收尾
 
-- [ ] 20.1 后端编译验证：`mvn compile` 无错误
+- [x] 20.1 后端编译验证：`mvn compile` 无错误
 - [ ] 20.2 前端编译验证：`flutter build web` 无错误
 - [ ] 20.3 验证登录登出流程
 - [ ] 20.4 验证动态菜单和权限控制

@@ -12,6 +12,11 @@ import '../../features/system/config/presentation/pages/config_list_page.dart';
 import '../../features/system/notice/presentation/pages/notice_list_page.dart';
 import '../../features/monitor/operlog/presentation/pages/operlog_list_page.dart';
 import '../../features/monitor/loginlog/presentation/pages/loginlog_list_page.dart';
+import '../../features/monitor/online/presentation/pages/online_user_list_page.dart';
+import '../../features/monitor/server/presentation/pages/server_monitor_page.dart';
+import '../../features/devtools/gen/presentation/pages/gen_table_list_page.dart';
+import '../../features/devtools/job/presentation/pages/job_list_page.dart';
+import '../../features/devtools/job_log/presentation/pages/job_log_list_page.dart';
 import '../storage/storage_service.dart';
 import '../../shared/layouts/admin_layout.dart';
 
@@ -78,6 +83,26 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/monitor/loginlog',
             builder: (context, state) => const LoginLogListPage(),
+          ),
+          GoRoute(
+            path: '/monitor/online',
+            builder: (context, state) => const OnlineUserListPage(),
+          ),
+          GoRoute(
+            path: '/monitor/server',
+            builder: (context, state) => const ServerMonitorPage(),
+          ),
+          GoRoute(
+            path: '/devtools/gen',
+            builder: (context, state) => const GenTableListPage(),
+          ),
+          GoRoute(
+            path: '/devtools/job',
+            builder: (context, state) => const JobListPage(),
+          ),
+          GoRoute(
+            path: '/devtools/job-log',
+            builder: (context, state) => const JobLogListPage(),
           ),
         ],
       ),
